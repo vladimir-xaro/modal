@@ -2,8 +2,7 @@
   "name": "@xaro/modal",
   "version": "0.0.1-alpha.1",
   "description": "",
-  "main": "./build/Modal.umd.js",
-  "types": "./src/types.d.ts",
+  "main": "./src/index.ts",
   "scripts": {
     "watch": "cross-env NODE_ENV=development webpack --watch --config webpack/webpack.dev.js",
     "build": "cross-env NODE_ENV=development webpack --config webpack/webpack.dev.js",
@@ -29,7 +28,6 @@
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "@types/webpack-env": "^1.15.3",
-    "@xaro/event-emitter": "^1.4.2",
     "@xaro/extend": "^1.0.3",
     "babel-loader": "^8.1.0",
     "cross-env": "^7.0.2",
@@ -45,5 +43,7 @@
     "webpack-cli": "^4.2.0",
     "webpack-merge": "^5.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@xaro/event-emitter": "^1.4.2"
+  }
 }

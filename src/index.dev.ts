@@ -1,6 +1,5 @@
 import './scss';
-import Modal from "./";
-import { I_Modal } from "./types";
+import Modal, { I_Modal } from "./";
 
 const modal = new Modal({
   el: document.querySelector('.modal') as HTMLElement,
