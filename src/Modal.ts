@@ -9,7 +9,7 @@ const defaults = {
     container:    null
   },
   visible:      false,
-  animations:      true,
+  animations:   true,
   transitions:  false,
   closeAttr:    'data-modal-close',
   allow: {
