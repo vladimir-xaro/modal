@@ -1,0 +1,125 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes translateIn {
+  from {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes translateOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  height: 3000px;
+  margin: 0;
+  background: linear-gradient(0deg, rgba(0, 255, 0, 0.5) 0%, rgba(0, 0, 255, 0.5) 100%);
+}
+
+.container {
+  max-width: 100%;
+  width: 600px;
+}
+
+.modal {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.modal--transitionable .modal__container {
+  opacity: 0;
+  transform: translateY(-100px);
+  transition-duration: 300ms;
+}
+.modal--transitionable .modal__backdrop {
+  opacity: 0;
+  transition-duration: 200ms;
+}
+.modal--visible {
+  display: flex;
+}
+.modal-animation-backdrop--show {
+  animation: fadeIn 200ms linear both;
+}
+.modal-animation-backdrop--hide {
+  animation: fadeOut 200ms linear both;
+}
+.modal-animation-container--show {
+  animation: translateIn 300ms linear both;
+}
+.modal-animation-container--hide {
+  animation: translateOut 300ms linear both;
+}
+.modal-animation--cancel {
+  animation: none !important;
+}
+.modal-transition-backdrop--show {
+  opacity: 1;
+}
+.modal-transition-backdrop--hide {
+  opacity: 0;
+}
+.modal-transition-container--show {
+  opacity: 1;
+}
+.modal-transition-container--hide {
+  opacity: 0;
+  transform: translateY(100px);
+}
+.modal-transition--cancel {
+  transition: none !important;
+}
+.modal__backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.modal__container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  border: solid 1px black;
+  background-color: #fff;
+}
+
+/*# sourceMappingURL=Modal.css.map*/
