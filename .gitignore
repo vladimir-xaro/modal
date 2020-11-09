@@ -1,10 +1,10 @@
 .DS_Store
 
-/build
-# /dev
-# /examples
+# /build
+/dev
+/examples
 /node_modules
-# /tests
+/tests
 /webpack
 
 # /src/index.dev.ts
