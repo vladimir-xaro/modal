@@ -27,13 +27,9 @@ export interface I_ModalConstructorConfig {
     close?:     string;
   };
   classes?: {
-    visible?: {
-      wrapper?:   string;
-      container?: string;
-      backdrop?:  string;
-    };
+    visible?:   string;
     animation?: {
-      cancel?: string;
+      cancel?:  string;
       show?: {
         container?: string;
         backdrop?:  string;
@@ -78,11 +74,7 @@ export interface I_ModalConfig {
     close:      string;
   };
   classes: {
-    visible: {
-      wrapper:    string;
-      container:  string;
-      backdrop:   string;
-    };
+    visible:    string;
     animation: {
       cancel:     string;
       show: {

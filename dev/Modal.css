@@ -14,6 +14,26 @@
     opacity: 0;
   }
 }
+@keyframes translateIn {
+  from {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes translateOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}
 *,
 *:before,
 *:after {
@@ -46,11 +66,17 @@ body {
 .modal--visible {
   display: flex;
 }
-.modal-animation--show {
-  animation: fadeIn 300ms linear both;
+.modal-animation-backdrop--show {
+  animation: fadeIn 200ms linear both;
 }
-.modal-animation--hide {
-  animation: fadeOut 300ms linear both;
+.modal-animation-backdrop--hide {
+  animation: fadeOut 200ms linear both;
+}
+.modal-animation-container--show {
+  animation: translateIn 300ms linear both;
+}
+.modal-animation-container--hide {
+  animation: translateOut 300ms linear both;
 }
 .modal-animation--cancel {
   animation: none !important;

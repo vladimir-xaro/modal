@@ -35,11 +35,21 @@ body {
   }
 
   &-animation {
-    &--show {
-      animation: fadeIn 300ms linear both;
+    &-backdrop {
+      &--show {
+        animation: fadeIn 200ms linear both;
+      }
+      &--hide {
+        animation: fadeOut 200ms linear both;
+      }
     }
-    &--hide {
-      animation: fadeOut 300ms linear both;
+    &-container {
+      &--show {
+        animation: translateIn 300ms linear both;
+      }
+      &--hide {
+        animation: translateOut 300ms linear both;
+      }
     }
     &--cancel {
       animation: none !important;

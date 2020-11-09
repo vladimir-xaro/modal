@@ -22,16 +22,16 @@ const defaults = {
     closeBtn:   '.modal__btn-close'
   },
   classes: {
-    wrapper: 'modal--visible',
+    visible: 'modal--visible',
     animation: {
       cancel: 'modal-animation--cancel',
       show: {
-        container:  'modal-animation--show',
-        backdrop:   'modal-animation--show',
+        container:  'modal-animation-container--show',
+        backdrop:   'modal-animation-backdrop--show',
       },
       hide: {
-        container:  'modal-animation--hide',
-        backdrop:   'modal-animation--hide',
+        container:  'modal-animation-container--hide',
+        backdrop:   'modal-animation-backdrop--hide',
       }
     }
   },
@@ -134,6 +134,7 @@ export default class Modal implements I_Modal {
 
   /** show/hide animation end */
   protected animationEndCallback(key1: string, key2: string, hide: boolean, event: AnimationEvent) {
+    console.log('animationEndCallback', key1);
     this.animation[key1] = false;
 
     if (this.config.dom[key2] && this.animation[key2]) {
@@ -143,7 +144,7 @@ export default class Modal implements I_Modal {
     this.pending = false;
 
     if (hide) {
-      this.config.el.classList.remove('modal--visible');
+      this.config.el.classList.remove(this.config.classes.visible);
     }
 
     this.emitter.emit('after' + hide ? 'Hide' : 'Show', this, event);
@@ -188,10 +189,14 @@ export default class Modal implements I_Modal {
       container.classList.remove(this.config.classes.animation.hide.container, this.config.classes.animation.cancel);
       backdrop?.classList.remove(this.config.classes.animation.hide.backdrop, this.config.classes.animation.cancel);
     }
-    el.classList.add('modal--visible');
+    el.classList.add(this.config.classes.visible);
     if (this.config.animate) {
+      this.animation.container = true;
       container.classList.add(this.config.classes.animation.show.container);
-      backdrop?.classList.add(this.config.classes.animation.show.backdrop);
+      if (backdrop) {
+        this.animation.backdrop = true;
+        backdrop.classList.add(this.config.classes.animation.show.backdrop);
+      }
     }
 
     this.addListeners();
@@ -221,6 +226,7 @@ export default class Modal implements I_Modal {
       container.classList.add(this.config.classes.animation.cancel);
       backdrop?.classList.add(this.config.classes.animation.cancel);
       this.emitter.unsubscribe('containerAnimationEnd', 'backdropAnimationEnd');
+      this.pending = false;
     }
 
     this.emitter.emit('beforeHide', this);
@@ -232,9 +238,13 @@ export default class Modal implements I_Modal {
     if (this.config.animate) {
       this.pending = true;
       
+      this.animation.container = true;
       container.classList.remove(this.config.classes.animation.show.container, this.config.classes.animation.cancel);
-      backdrop?.classList.remove(this.config.classes.animation.show.backdrop, this.config.classes.animation.cancel);
-      backdrop?.classList.add(this.config.classes.animation.hide.backdrop);
+      if (backdrop) {
+        this.animation.backdrop = true;
+        backdrop.classList.remove(this.config.classes.animation.show.backdrop, this.config.classes.animation.cancel);
+        backdrop.classList.add(this.config.classes.animation.hide.backdrop);
+      }
       container.classList.add(this.config.classes.animation.hide.container);
     }
 
@@ -247,11 +257,11 @@ export default class Modal implements I_Modal {
     document.body.style.height    = '';
 
     if (this.config.animate) {
-      this.emitter.once('containerAnimationEnd', event => this.animationEndCallback('container', 'backdrop', true, event));
       this.emitter.once('backdropAnimationEnd', event => this.animationEndCallback('backdrop', 'container', true, event));
+      this.emitter.once('containerAnimationEnd', event => this.animationEndCallback('container', 'backdrop', true, event));
     } else {
       this.emitter.emit('afterHide', this);
-      el.classList.remove('modal--visible');
+      el.classList.remove(this.config.classes.visible);
     }
   }
 }

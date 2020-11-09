@@ -7,7 +7,7 @@ const modal = new Modal({
   allow: {
     closeEsc: true
   },
-  animate: false,
+  // animate: false,
   on: {
     init: (modal: I_Modal) => {
 
