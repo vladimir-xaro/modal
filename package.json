@@ -15,7 +15,7 @@
     "url": "git+https://github.com/vladimir-xaro/modal.git"
   },
   "keywords": [
-    "tabs",
+    "modal",
     "typescript"
   ],
   "author": "Vladimir Slavgorodskiy <vladimir.xaro@gmail.com>",
