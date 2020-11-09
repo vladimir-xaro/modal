@@ -30,6 +30,31 @@ body {
   justify-content: center;
   align-items: center;
 
+  &--transitionable {
+    // &.modal--visible {
+    //   .modal {
+    //     &__container {
+    //       opacity: 1;
+    //       transform: translateY(0);
+    //     }
+    //     &__backdrop {
+    //       opacity: 1;
+    //     }
+    //   }
+    // }
+    .modal {
+      &__container {
+        opacity: 0;
+        transform: translateY(-100px);
+        transition-duration: 300ms;
+      }
+      &__backdrop {
+        opacity: 0;
+        transition-duration: 200ms;
+      }
+    }
+  }
+
   &--visible {
     display: flex;
   }
@@ -53,6 +78,30 @@ body {
     }
     &--cancel {
       animation: none !important;
+    }
+  }
+
+  &-transition {
+    &-backdrop {
+      &--show {
+        opacity: 1;
+      }
+      &--hide {
+        opacity: 0;
+      }
+    }
+    &-container {
+      &--show {
+        opacity: 1;
+        // transform: translateY(0);
+      }
+      &--hide {
+        opacity: 0;
+        transform: translateY(100px);
+      }
+    }
+    &--cancel {
+      transition: none !important;
     }
   }
 

@@ -63,6 +63,15 @@ body {
   justify-content: center;
   align-items: center;
 }
+.modal--transitionable .modal__container {
+  opacity: 0;
+  transform: translateY(-100px);
+  transition-duration: 300ms;
+}
+.modal--transitionable .modal__backdrop {
+  opacity: 0;
+  transition-duration: 200ms;
+}
 .modal--visible {
   display: flex;
 }
@@ -80,6 +89,22 @@ body {
 }
 .modal-animation--cancel {
   animation: none !important;
+}
+.modal-transition-backdrop--show {
+  opacity: 1;
+}
+.modal-transition-backdrop--hide {
+  opacity: 0;
+}
+.modal-transition-container--show {
+  opacity: 1;
+}
+.modal-transition-container--hide {
+  opacity: 0;
+  transform: translateY(100px);
+}
+.modal-transition--cancel {
+  transition: none !important;
 }
 .modal__backdrop {
   position: absolute;

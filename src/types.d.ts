@@ -12,9 +12,11 @@ export interface I_Modal {
 }
 
 export interface I_ModalConstructorConfig {
-  el:               HTMLElement;
-  visible?:         boolean;
-  animate?:         boolean;
+  el:           HTMLElement;
+  visible?:     boolean;
+  animations?:  boolean;  // OR transtions
+  transitions?: boolean;  // OR animations
+  closeAttr?:   string;
   allow?: {
     closeEsc?:          boolean;
     closeAttr?:         boolean;
@@ -22,46 +24,58 @@ export interface I_ModalConstructorConfig {
     animateBackdrop?:   boolean;
   };
   selector?: {
-    container?: string;
-    backdrop?:  string;
-    close?:     string;
+    container?:         string;
+    backdrop?:          string;
+    close?:             string;
   };
   classes?: {
-    visible?:   string;
+    visible?:           string;
     animation?: {
-      cancel?:  string;
+      cancel?:            string;
       show?: {
-        container?: string;
-        backdrop?:  string;
+        container?:         string;
+        backdrop?:          string;
       };
       hide?: {
-        container?: string;
-        backdrop?:  string;
+        container?:         string;
+        backdrop?:          string;
+      };
+    };
+    transition?: {
+      cancel?:          string;
+      show?: {
+        container?:       string;
+        backdrop?:        string;
+      };
+      hide?: {
+        container?:       string;
+        backdrop?:        string;
       };
     };
   };
-  closeAttr?: string;
 
 
   on?: {
     init?:            (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
     beforeHide?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    afterHide?:       (modal: I_Modal, event?: AnimationEvent) => void | ((modal: I_Modal, event?: AnimationEvent) => void)[];
+    afterHide?:       (modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
     beforeShow?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    afterShow?:       (modal: I_Modal, event?: AnimationEvent) => void | ((modal: I_Modal, event?: AnimationEvent) => void)[];
+    afterShow?:       (modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
     escKey?:          (modal: I_Modal, event?: KeyboardEvent) => void | ((modal: I_Modal, event?: KeyboardEvent) => void)[];
     closeAttrClick?:  (modal: I_Modal, event?: MouseEvent) => void | ((modal: I_Modal, event?: MouseEvent) => void)[];
   };
 }
 
 export interface I_ModalConfig {
-  el:         HTMLElement;
+  el:           HTMLElement;
   dom: {
-    backdrop:   HTMLElement | null,
-    container:  HTMLElement
+    backdrop:         HTMLElement | null,
+    container:        HTMLElement
   };
-  visible:    boolean;
-  animate:    boolean;
+  visible:      boolean;
+  animations:   boolean;
+  transitions:  boolean;
+  closeAttr:    string;
   allow: {
     closeEsc:         boolean;
     closeAttr:        boolean;
@@ -69,25 +83,35 @@ export interface I_ModalConfig {
     animateBackdrop:  boolean;
   };
   selector: {
-    container:  string;
-    backdrop:   string;
-    close:      string;
+    container:        string;
+    backdrop:         string;
+    close:            string;
   };
   classes: {
-    visible:    string;
+    visible:          string;
     animation: {
-      cancel:     string;
+      cancel:           string;
       show: {
-        container:  string;
-        backdrop:   string;
+        container:        string;
+        backdrop:         string;
       };
       hide: {
-        container:  string;
-        backdrop:   string;
+        container:        string;
+        backdrop:         string;
+      };
+    };
+    transition: {
+      cancel:           string;
+      show: {
+        container:        string;
+        backdrop:         string;
+      };
+      hide: {
+        container:        string;
+        backdrop:         string;
       };
     };
   };
-  closeAttr:  string;
 }
 
 export interface I_ModalDisplayConfig {
