@@ -1,6 +1,8 @@
 # @xaro/modal
 
 TS Modal library with animations, transitions and events
+> This is an alpha version of the package and some configuration properties are not implemented or may not work.
+> The names and meanings of configuration properties are subject to change in the future.
 
 ## Usage
 
@@ -28,7 +30,7 @@ const modal = new Modal({
 });
 ```
 
-## Interfaces
+## Interfaces & Types
 
 *types.d.ts*
 ```ts
@@ -42,25 +44,28 @@ interface I_Modal {
 }
 
 interface I_ModalConstructorConfig {
-  id?:          string;                 // for data attr target
+  id?:          string;                 // for data attr target (or [data-modal-id], priority - object property)
   el:           HTMLElement | string;   // main wrapper
   visible?:     boolean;                // show after init
-  animations?:  boolean;                // XOR transitions (priority, default)
-  transitions?: boolean;                // XOR animations
+  mutations?: {
+    container?:         T_Mutation;     // container animation type
+    backdrop?:          T_Mutation;     // backdrop animation type
+  }
+  timeout?: {
+    container?: {
+      animation?:        number;       // add class with animation to container after %number% ms (default: 0)
+      transition?:       number;       // add class with transitions to container after %number% ms (default: 100), preferably more than 50
+
+    };
+    backdrop?: {
+      animation?:        number;       // add class with animation to backdrop after %number% ms (default: 0)
+      transition?:       number;       // add class with transition to backdrop after %number% ms (default: 50), preferably more than 50
+    };
+  };
   attr?: {
     close?:             string;         // add close listeners
     target?:            string;         // open modal by
     id?:                string;         // unique modal id
-  };
-  timeout?: {
-    container?: {
-      animations?:        number;       // add class with animation to container after %number% ms
-      transitions?:       number;       // add class with transitions to container after %number% ms
-    };
-    backdrop?: {
-      animations?:        number;       // add class with animation to backdrop after %number% ms
-      transitions?:       number;       // add class with transition to backdrop after %number% ms
-    };
   };
   allow?: {
     bodyScroll?:        boolean;        // allow body scroll (default: false)
@@ -98,6 +103,16 @@ interface I_ModalConstructorConfig {
         backdrop?:          string;     // default: 'modal-transition-backdrop--hide'
       };
     };
+    common?: {
+      show?: {
+        container?:         string;     // default: 'modal-container--show'
+        backdrop?:          string;     // default: 'modal-backdrop--show'
+      };
+      hide?: {
+        container?:         string;     // default: 'modal-container--hide'
+        backdrop?:          string;     // default: 'modal-backdrop--hide'
+      };
+    };
   };
 
   on?: {
@@ -110,6 +125,12 @@ interface I_ModalConstructorConfig {
     closeAttrClick?:  (modal: I_Modal, event?: MouseEvent) => void | ((modal: I_Modal, event?: MouseEvent) => void)[];
   };
 }
+
+interface I_ModalDisplayConfig {
+  force?: boolean;
+}
+
+type T_Mutation = 'animation' | 'transition' | false;
 ```
 
 ## License

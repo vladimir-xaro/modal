@@ -11,25 +11,28 @@ export interface I_Modal {
 }
 
 export interface I_ModalConstructorConfig {
-  id?:          string;                 // for data attr target
+  id?:          string;                 // for data attr target (or [data-modal-id], priority - object property)
   el:           HTMLElement | string;   // main wrapper
   visible?:     boolean;                // show after init
-  animations?:  boolean;                // XOR transtions (priority, default)
-  transitions?: boolean;                // XOR animations
+  mutations?: {
+    container?:         T_Mutation;     // container animation type
+    backdrop?:          T_Mutation;     // backdrop animation type
+  }
+  timeout?: {
+    container?: {
+      animation?:        number;       // add class with animation to container after %number% ms (default: 0)
+      transition?:       number;       // add class with transitions to container after %number% ms (default: 100), preferably more than 50
+
+    };
+    backdrop?: {
+      animation?:        number;       // add class with animation to backdrop after %number% ms (default: 0)
+      transition?:       number;       // add class with transition to backdrop after %number% ms (default: 50), preferably more than 50
+    };
+  };
   attr?: {
     close?:             string;         // add close listeners
     target?:            string;         // open modal by
     id?:                string;         // unique modal id
-  };
-  timeout?: {
-    container?: {
-      animations?:        number;
-      transitions?:       number;
-    };
-    backdrop?: {
-      animations?:        number;
-      transitions?:       number;
-    };
   };
   allow?: {
     bodyScroll?:        boolean;        // allow body scroll (default: false)
@@ -67,6 +70,16 @@ export interface I_ModalConstructorConfig {
         backdrop?:          string;     // default: 'modal-transition-backdrop--hide'
       };
     };
+    common?: {
+      show?: {
+        container?:         string;     // default: 'modal-container--show'
+        backdrop?:          string;     // default: 'modal-backdrop--show'
+      };
+      hide?: {
+        container?:         string;     // default: 'modal-container--hide'
+        backdrop?:          string;     // default: 'modal-backdrop--hide'
+      };
+    };
   };
 
   on?: {
@@ -88,16 +101,18 @@ export interface I_ModalConfig {
     container:        HTMLElement
   };
   visible:      boolean;
-  animations:   boolean;
-  transitions:  boolean;
+  mutations: {
+    container:    T_Mutation;
+    backdrop:     T_Mutation;
+  };
   timeout: {
     container: {
-      animations:     number;
-      transitions:    number;
+      animation:     number;
+      transition:    number;
     };
     backdrop: {
-      animations:     number;
-      transitions:    number;
+      animation:     number;
+      transition:    number;
     };
   };
   attr: {
@@ -141,11 +156,23 @@ export interface I_ModalConfig {
         backdrop:         string;
       };
     };
+    common: {
+      show: {
+        container:       string;
+        backdrop:        string;
+      };
+      hide: {
+        container:       string;
+        backdrop:        string;
+      };
+    };
   };
 }
 
 export interface I_ModalDisplayConfig {
+  force?: boolean;
   // animation?:     boolean;
   // ignoreEvents?:  boolean;
-  force?: boolean;
 }
+
+export type T_Mutation = 'animation' | 'transition' | false;
