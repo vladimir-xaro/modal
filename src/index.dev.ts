@@ -2,23 +2,37 @@ import './scss';
 import Modal, { I_Modal } from "./";
 
 const modal1 = new Modal({
+  id: 'test',
   // el: document.querySelector('.modal-1') as HTMLElement,
   el: '.modal-1',
-  transitions: true,
+  // visible: true,
+  // animations: true,
+  // transitions: true,
+  mutations: {
+    container:  'transition',
+    backdrop:   'transition',
+  },
+  attr: {
+    close:  'data-close',
+    target: 'data-target',
+    id:     'data-id',
+  },
   timeout: {
     container: {
-      animations:   100,
-      transitions:  250
+      animation:   100,
+      transition:  250
     },
     backdrop: {
-      animations:   0,
-      transitions:  50
+      animation:   0,
+      transition:  50
     },
   },
   allow: {
     bodyScroll: true,
+    // closeEsc:   false,
+    // closeAttr:  false,
+    animateContainer: false,
   }
-  // visible: true,
 });
 // const modal2 = new Modal({
 //   el: document.querySelector('.modal-2') as HTMLElement,

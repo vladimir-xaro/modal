@@ -6,5 +6,6 @@ export {
   I_Modal,
   I_ModalConstructorConfig,
   I_ModalConfig,
-  I_ModalDisplayConfig
+  I_ModalDisplayConfig,
+  T_Mutation
 } from './types';

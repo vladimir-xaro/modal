@@ -19,6 +19,8 @@ body {
 }
 
 .modal {
+  $self: &;
+
   display: none;
   position: fixed;
   top: 0;
@@ -49,7 +51,28 @@ body {
     display: flex;
   }
 
-  &-animation {
+  &__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(black, 0.3);
+    opacity: 0;
+    transition-duration: 300ms;
+  }
+  &__container {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    border: solid 1px black;
+    background-color: #fff;
+    opacity: 0;
+    transform: translateY(-100px);
+    transition-duration: 300ms;
+  }
+
+  #{$self}-animation {
     &-backdrop {
       &--show {
         animation: fadeIn 200ms linear both;
@@ -70,85 +93,27 @@ body {
       animation: none !important;
     }
   }
-
-  &__backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(black, 0.3);
-    opacity: 0;
-    transition-duration: 300ms;
-
-    &.modal {
-      &-animation {
-        &-backdrop {
-          &--show {
-            animation: fadeIn 200ms linear both;
-          }
-          &--hide {
-            animation: fadeOut 200ms linear both;
-          }
-        }
-        &--cancel {
-          animation: none !important;
-        }
+  #{$self}-transition {
+    &-container {
+      &--show {
+        opacity: 1;
+        transform: translateY(0);
       }
-      &-transition {
-        &-backdrop {
-          &--show {
-            opacity: 1;
-          }
-          &--hide {
-            opacity: 0;
-          }
-        }
-        &--cancel {
-          transition: none !important;
-        }
+      &--hide {
+        opacity: 0;
+        transform: translateY(100px);
       }
     }
-  }
-  &__container {
-    position: relative;
-    width: 500px;
-    height: 500px;
-    border: solid 1px black;
-    background-color: #fff;
-    opacity: 0;
-    transform: translateY(-100px);
-    transition-duration: 300ms;
-
-    &.modal {
-      &-animation {
-        &-container {
-          &--show {
-            animation: translateIn 300ms linear both;
-          }
-          &--hide {
-            animation: translateOut 300ms linear both;
-          }
-        }
-        &--cancel {
-          animation: none !important;
-        }
+    &-backdrop {
+      &--show {
+        opacity: 1;
       }
-      &-transition {
-        &-container {
-          &--show {
-            opacity: 1;
-            transform: translateY(0);
-          }
-          &--hide {
-            opacity: 0;
-            transform: translateY(100px);
-          }
-        }
-        &--cancel {
-          transition: none !important;
-        }
+      &--hide {
+        opacity: 0;
       }
+    }
+    &--cancel {
+      transition: none !important;
     }
   }
 }

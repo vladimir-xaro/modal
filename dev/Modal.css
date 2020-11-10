@@ -66,21 +66,6 @@ body {
 .modal--visible {
   display: flex;
 }
-.modal-animation-backdrop--show {
-  animation: fadeIn 200ms linear both;
-}
-.modal-animation-backdrop--hide {
-  animation: fadeOut 200ms linear both;
-}
-.modal-animation-container--show {
-  animation: translateIn 300ms linear both;
-}
-.modal-animation-container--hide {
-  animation: translateOut 300ms linear both;
-}
-.modal-animation--cancel {
-  animation: none !important;
-}
 .modal__backdrop {
   position: absolute;
   top: 0;
@@ -90,24 +75,6 @@ body {
   background-color: rgba(0, 0, 0, 0.3);
   opacity: 0;
   transition-duration: 300ms;
-}
-.modal__backdrop.modal-animation-backdrop--show {
-  animation: fadeIn 200ms linear both;
-}
-.modal__backdrop.modal-animation-backdrop--hide {
-  animation: fadeOut 200ms linear both;
-}
-.modal__backdrop.modal-animation--cancel {
-  animation: none !important;
-}
-.modal__backdrop.modal-transition-backdrop--show {
-  opacity: 1;
-}
-.modal__backdrop.modal-transition-backdrop--hide {
-  opacity: 0;
-}
-.modal__backdrop.modal-transition--cancel {
-  transition: none !important;
 }
 .modal__container {
   position: relative;
@@ -119,24 +86,36 @@ body {
   transform: translateY(-100px);
   transition-duration: 300ms;
 }
-.modal__container.modal-animation-container--show {
+.modal .modal-animation-backdrop--show {
+  animation: fadeIn 200ms linear both;
+}
+.modal .modal-animation-backdrop--hide {
+  animation: fadeOut 200ms linear both;
+}
+.modal .modal-animation-container--show {
   animation: translateIn 300ms linear both;
 }
-.modal__container.modal-animation-container--hide {
+.modal .modal-animation-container--hide {
   animation: translateOut 300ms linear both;
 }
-.modal__container.modal-animation--cancel {
+.modal .modal-animation--cancel {
   animation: none !important;
 }
-.modal__container.modal-transition-container--show {
+.modal .modal-transition-container--show {
   opacity: 1;
   transform: translateY(0);
 }
-.modal__container.modal-transition-container--hide {
+.modal .modal-transition-container--hide {
   opacity: 0;
   transform: translateY(100px);
 }
-.modal__container.modal-transition--cancel {
+.modal .modal-transition-backdrop--show {
+  opacity: 1;
+}
+.modal .modal-transition-backdrop--hide {
+  opacity: 0;
+}
+.modal .modal-transition--cancel {
   transition: none !important;
 }
 
