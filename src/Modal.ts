@@ -2,54 +2,6 @@ import { I_Modal, I_ModalConfig, I_ModalConstructorConfig, I_ModalDisplayConfig 
 import EventEmitter, { I_EventEmitter } from "@xaro/event-emitter";
 import extend from "@xaro/extend";
 
-const defaults = {
-  el:           null,
-  dom: {
-    backdrop:     null,
-    container:    null
-  },
-  visible:      false,
-  animations:   true,
-  transitions:  false,
-  closeAttr:    'data-modal-close',
-  allow: {
-    closeEsc:         true,
-    closeAttr:        true,
-    animateContainer: true,
-    animateBackdrop:  true
-  },
-  selector: {
-    container:        '.modal__container',
-    backdrop:         '.modal__backdrop',
-    closeBtn:         '.modal__btn-close'
-  },
-  classes: {
-    visible:          'modal--visible',
-    animation: {
-      cancel:           'modal-animation--cancel',
-      show: {
-        container:        'modal-animation-container--show',
-        backdrop:         'modal-animation-backdrop--show',
-      },
-      hide: {
-        container:        'modal-animation-container--hide',
-        backdrop:         'modal-animation-backdrop--hide',
-      }
-    },
-    transition: {
-      cancel:           'modal-transition--cancel',
-      show: {
-        container:        'modal-transition-container--show',
-        backdrop:         'modal-transition-backdrop--show',
-      },
-      hide: {
-        container:        'modal-transition-container--hide',
-        backdrop:         'modal-transition-backdrop--hide',
-      }
-    }
-  }
-}
-
 export default class Modal implements I_Modal {
   static blurEl: Element | null = null;
 
@@ -66,7 +18,57 @@ export default class Modal implements I_Modal {
   constructor(config: I_ModalConstructorConfig) {
     this.emitter    = new EventEmitter(config.on);
 
-    this.config     = extend(defaults, config);
+    this.config     = extend({
+      el:           null,
+      dom: {
+        backdrop:     null,
+        container:    null
+      },
+      visible:      false,
+      animations:   true,
+      transitions:  false,
+      closeAttr:    'data-modal-close',
+      allow: {
+        closeEsc:         true,
+        closeAttr:        true,
+        animateContainer: true,
+        animateBackdrop:  true
+      },
+      selector: {
+        container:        '.modal__container',
+        backdrop:         '.modal__backdrop',
+        closeBtn:         '.modal__btn-close'
+      },
+      classes: {
+        visible:          'modal--visible',
+        animation: {
+          cancel:           'modal-animation--cancel',
+          show: {
+            container:        'modal-animation-container--show',
+            backdrop:         'modal-animation-backdrop--show',
+          },
+          hide: {
+            container:        'modal-animation-container--hide',
+            backdrop:         'modal-animation-backdrop--hide',
+          }
+        },
+        transition: {
+          cancel:           'modal-transition--cancel',
+          show: {
+            container:        'modal-transition-container--show',
+            backdrop:         'modal-transition-backdrop--show',
+          },
+          hide: {
+            container:        'modal-transition-container--hide',
+            backdrop:         'modal-transition-backdrop--hide',
+          }
+        }
+      }
+    }, config);
+
+    if (! this.config.el) {
+      throw new Error("Element does not exists");
+    }
 
     if (! this.config.dom.backdrop) {
       this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
@@ -91,12 +93,18 @@ export default class Modal implements I_Modal {
       this.config.dom.container.addEventListener('animationend', this.__containerAnimationEndListener);
       this.config.dom.backdrop?.addEventListener('animationend', this.__backdropAnimationEndListener);
     } else if (this.config.transitions) {
-      this.__containerTransitionEndListener  = this.__containerTransitionEndListener.bind(this);
-      this.__backdropTransitionEndListener   = this.__backdropTransitionEndListener.bind(this);
+      this.__containerTransitionEndListener = this.__containerTransitionEndListener.bind(this);
+      this.__backdropTransitionEndListener  = this.__backdropTransitionEndListener.bind(this);
 
       this.config.dom.container.addEventListener('transitionend', this.__containerTransitionEndListener);
       this.config.dom.backdrop?.addEventListener('transitionend', this.__backdropTransitionEndListener);
     }
+
+    if (this.config.visible) {
+      this.show({ force: true });
+    }
+
+    this.emitter.emit('init', this);
   }
 
 
@@ -160,7 +168,6 @@ export default class Modal implements I_Modal {
 
   /** show/hide animation end callback */
   protected animationEndCallback(key1: string, key2: string, hide: boolean, event: AnimationEvent) {
-    console.log('animationEndCallback', key1);
     this.animation[key1] = false;
 
     if (this.config.dom[key2] && this.animation[key2]) {
@@ -178,7 +185,6 @@ export default class Modal implements I_Modal {
 
   /** show/hide transition end callback */
   protected transitionEndCallback(key1: string, key2: string, hide: boolean, event: TransitionEvent) {
-    console.log('transitionEndCallback', key1);
     this.animation[key1] = false;
 
     if (this.config.dom[key2] && this.animation[key2]) {
@@ -194,18 +200,12 @@ export default class Modal implements I_Modal {
     this.emitter.emit('after' + hide ? 'Hide' : 'Show', this, event);
   }
 
-  get visible() {
-    return this.config.visible;
-  }
-
-  set visible(newValue) {
-    this.config.visible = !!newValue;
-  }
-
 
   show(config?: I_ModalDisplayConfig) {
-    if (this.visible) {
-      return;
+    if (this.config.visible) {
+      if (! config?.force) {
+        return;
+      }
     }
 
     const el        = this.config.el;
@@ -225,7 +225,7 @@ export default class Modal implements I_Modal {
 
     this.emitter.emit('beforeShow', this);
 
-    this.visible = true;
+    this.config.visible = true;
 
     if (document.activeElement && document.hasFocus()) {
       Modal.blurEl = document.activeElement;
@@ -279,8 +279,10 @@ export default class Modal implements I_Modal {
 
 
   hide(config?: I_ModalDisplayConfig) {
-    if (! this.visible) {
-      return;
+    if (! this.config.visible) {
+      if (! config?.force) {
+        return;
+      }
     }
 
     const el        = this.config.el;
@@ -303,7 +305,7 @@ export default class Modal implements I_Modal {
     
     this.removeListeners();
     
-    this.visible = false;
+    this.config.visible = false;
 
     if (this.config.animations) {
       this.pending = true;
@@ -346,5 +348,9 @@ export default class Modal implements I_Modal {
       this.emitter.emit('afterHide', this);
       el.classList.remove(this.config.classes.visible);
     }
+  }
+
+  toggle() {
+    this.config.visible ? this.hide() : this.show();
   }
 }

@@ -1,25 +1,21 @@
 import './scss';
 import Modal, { I_Modal } from "./";
 
-const modal = new Modal({
-  el: document.querySelector('.modal') as HTMLElement,
-  allow: {
-    closeEsc: true
-  },
-  // animations: false,
+const modal1 = new Modal({
+  el: document.querySelector('.modal-1') as HTMLElement,
   transitions: true,
-  on: {
-    init: (modal: I_Modal) => {
-
-    },
-    afterShow: (modal: I_Modal) => {
-      console.log('[Modal] afterShow');
-    }
-  }
+});
+const modal2 = new Modal({
+  el: document.querySelector('.modal-2') as HTMLElement,
+  animations: true,
 });
 
-document.querySelector('.btn')?.addEventListener('click', () => {
-  modal.show();
+document.querySelector('.btn-1')?.addEventListener('click', () => {
+  modal1.show();
+});
+document.querySelector('.btn-2')?.addEventListener('click', () => {
+  modal2.show();
 });
 
-(window as any).modal = modal;
+(window as any).modal1 = modal1;
+(window as any).modal2 = modal2;

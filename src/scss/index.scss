@@ -31,17 +31,6 @@ body {
   align-items: center;
 
   &--transitionable {
-    // &.modal--visible {
-    //   .modal {
-    //     &__container {
-    //       opacity: 1;
-    //       transform: translateY(0);
-    //     }
-    //     &__backdrop {
-    //       opacity: 1;
-    //     }
-    //   }
-    // }
     .modal {
       &__container {
         opacity: 0;

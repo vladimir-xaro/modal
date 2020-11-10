@@ -1,4 +1,4 @@
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
@@ -11,12 +11,12 @@
 /*! export isObject [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ extend,
-/* harmony export */   "isObject": () => /* binding */ isObject
+/* harmony export */   "default": function() { return /* binding */ extend; },
+/* harmony export */   "isObject": function() { return /* binding */ isObject; }
 /* harmony export */ });
 function extend(...args) {
   const to = Object(args[0]);
@@ -56,7 +56,7 @@ function isObject(o) {
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
@@ -72,11 +72,11 @@ __webpack_require__.r(__webpack_exports__);
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ EventEmitter
+/* harmony export */   "default": function() { return /* binding */ EventEmitter; }
 /* harmony export */ });
 class EventEmitter {
     /**
@@ -230,16 +230,13 @@ class EventEmitter {
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
-/* harmony export */ });
 /* harmony import */ var _EventEmitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EventEmitter */ "./node_modules/@xaro/event-emitter/src/EventEmitter.ts");
 ;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_EventEmitter__WEBPACK_IMPORTED_MODULE_0__.default);
+/* harmony default export */ __webpack_exports__["default"] = (_EventEmitter__WEBPACK_IMPORTED_MODULE_0__.default);
 
 
 /***/ }),
@@ -252,63 +249,16 @@ __webpack_require__.r(__webpack_exports__);
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ Modal
+/* harmony export */   "default": function() { return /* binding */ Modal; }
 /* harmony export */ });
 /* harmony import */ var _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @xaro/event-emitter */ "./node_modules/@xaro/event-emitter/src/index.ts");
 /* harmony import */ var _xaro_extend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @xaro/extend */ "./node_modules/@xaro/extend/index.js");
 ;
 
-const defaults = {
-    el: null,
-    dom: {
-        backdrop: null,
-        container: null
-    },
-    visible: false,
-    animations: true,
-    transitions: false,
-    closeAttr: 'data-modal-close',
-    allow: {
-        closeEsc: true,
-        closeAttr: true,
-        animateContainer: true,
-        animateBackdrop: true
-    },
-    selector: {
-        container: '.modal__container',
-        backdrop: '.modal__backdrop',
-        closeBtn: '.modal__btn-close'
-    },
-    classes: {
-        visible: 'modal--visible',
-        animation: {
-            cancel: 'modal-animation--cancel',
-            show: {
-                container: 'modal-animation-container--show',
-                backdrop: 'modal-animation-backdrop--show',
-            },
-            hide: {
-                container: 'modal-animation-container--hide',
-                backdrop: 'modal-animation-backdrop--hide',
-            }
-        },
-        transition: {
-            cancel: 'modal-transition--cancel',
-            show: {
-                container: 'modal-transition-container--show',
-                backdrop: 'modal-transition-backdrop--show',
-            },
-            hide: {
-                container: 'modal-transition-container--hide',
-                backdrop: 'modal-transition-backdrop--hide',
-            }
-        }
-    }
-};
 class Modal {
     constructor(config) {
         this.pending = false;
@@ -317,7 +267,56 @@ class Modal {
             backdrop: false
         };
         this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default(config.on);
-        this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)(defaults, config);
+        this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)({
+            el: null,
+            dom: {
+                backdrop: null,
+                container: null
+            },
+            visible: false,
+            animations: true,
+            transitions: false,
+            closeAttr: 'data-modal-close',
+            allow: {
+                closeEsc: true,
+                closeAttr: true,
+                animateContainer: true,
+                animateBackdrop: true
+            },
+            selector: {
+                container: '.modal__container',
+                backdrop: '.modal__backdrop',
+                closeBtn: '.modal__btn-close'
+            },
+            classes: {
+                visible: 'modal--visible',
+                animation: {
+                    cancel: 'modal-animation--cancel',
+                    show: {
+                        container: 'modal-animation-container--show',
+                        backdrop: 'modal-animation-backdrop--show',
+                    },
+                    hide: {
+                        container: 'modal-animation-container--hide',
+                        backdrop: 'modal-animation-backdrop--hide',
+                    }
+                },
+                transition: {
+                    cancel: 'modal-transition--cancel',
+                    show: {
+                        container: 'modal-transition-container--show',
+                        backdrop: 'modal-transition-backdrop--show',
+                    },
+                    hide: {
+                        container: 'modal-transition-container--hide',
+                        backdrop: 'modal-transition-backdrop--hide',
+                    }
+                }
+            }
+        }, config);
+        if (!this.config.el) {
+            throw new Error("Element does not exists");
+        }
         if (!this.config.dom.backdrop) {
             this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
         }
@@ -342,6 +341,10 @@ class Modal {
             this.config.dom.container.addEventListener('transitionend', this.__containerTransitionEndListener);
             this.config.dom.backdrop?.addEventListener('transitionend', this.__backdropTransitionEndListener);
         }
+        if (this.config.visible) {
+            this.show({ force: true });
+        }
+        this.emitter.emit('init', this);
     }
     /** DOM Event Listeners */
     __closeAttrListener(event) {
@@ -391,7 +394,6 @@ class Modal {
     }
     /** show/hide animation end callback */
     animationEndCallback(key1, key2, hide, event) {
-        console.log('animationEndCallback', key1);
         this.animation[key1] = false;
         if (this.config.dom[key2] && this.animation[key2]) {
             return;
@@ -404,7 +406,6 @@ class Modal {
     }
     /** show/hide transition end callback */
     transitionEndCallback(key1, key2, hide, event) {
-        console.log('transitionEndCallback', key1);
         this.animation[key1] = false;
         if (this.config.dom[key2] && this.animation[key2]) {
             return;
@@ -415,15 +416,11 @@ class Modal {
         }
         this.emitter.emit('after' + hide ? 'Hide' : 0, this, event);
     }
-    get visible() {
-        return this.config.visible;
-    }
-    set visible(newValue) {
-        this.config.visible = !!newValue;
-    }
     show(config) {
-        if (this.visible) {
-            return;
+        if (this.config.visible) {
+            if (!config?.force) {
+                return;
+            }
         }
         const el = this.config.el;
         const container = this.config.dom.container;
@@ -440,7 +437,7 @@ class Modal {
             this.emitter.unsubscribe('containerAnimationEnd', 'backdropAnimationEnd');
         }
         this.emitter.emit('beforeShow', this);
-        this.visible = true;
+        this.config.visible = true;
         if (document.activeElement && document.hasFocus()) {
             Modal.blurEl = document.activeElement;
             document.activeElement.blur();
@@ -488,8 +485,10 @@ class Modal {
         }
     }
     hide(config) {
-        if (!this.visible) {
-            return;
+        if (!this.config.visible) {
+            if (!config?.force) {
+                return;
+            }
         }
         const el = this.config.el;
         const container = this.config.dom.container;
@@ -508,7 +507,7 @@ class Modal {
         }
         this.emitter.emit('beforeHide', this);
         this.removeListeners();
-        this.visible = false;
+        this.config.visible = false;
         if (this.config.animations) {
             this.pending = true;
             this.animation.container = true;
@@ -550,6 +549,9 @@ class Modal {
             el.classList.remove(this.config.classes.visible);
         }
     }
+    toggle() {
+        this.config.visible ? this.hide() : this.show();
+    }
 }
 Modal.blurEl = null;
 
@@ -563,32 +565,29 @@ Modal.blurEl = null;
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scss */ "./src/scss/index.scss");
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ */ "./src/index.ts");
 ;
 
-const modal = new ___WEBPACK_IMPORTED_MODULE_1__.default({
-    el: document.querySelector('.modal'),
-    allow: {
-        closeEsc: true
-    },
-    // animations: false,
+const modal1 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: document.querySelector('.modal-1'),
     transitions: true,
-    on: {
-        init: (modal) => {
-        },
-        afterShow: (modal) => {
-            console.log('[Modal] afterShow');
-        }
-    }
 });
-document.querySelector('.btn')?.addEventListener('click', () => {
-    modal.show();
+const modal2 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: document.querySelector('.modal-2'),
+    animations: true,
 });
-window.modal = modal;
+document.querySelector('.btn-1')?.addEventListener('click', () => {
+    modal1.show();
+});
+document.querySelector('.btn-2')?.addEventListener('click', () => {
+    modal2.show();
+});
+window.modal1 = modal1;
+window.modal2 = modal2;
 
 
 /***/ }),
@@ -600,16 +599,13 @@ window.modal = modal;
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
-/* harmony export */ });
 /* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Modal */ "./src/Modal.ts");
 ;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_Modal__WEBPACK_IMPORTED_MODULE_0__.default);
+/* harmony default export */ __webpack_exports__["default"] = (_Modal__WEBPACK_IMPORTED_MODULE_0__.default);
 
 
 /***/ })
@@ -641,32 +637,32 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 		__webpack_require__.d = function(exports, definition) {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
+/******/ 		__webpack_require__.r = function(exports) {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 /******/ 	// startup

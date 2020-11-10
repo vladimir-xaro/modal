@@ -9,10 +9,17 @@
 <body>
 
   <div class="container">
-    <button class="btn" data-modal-target="modal-1">modal-1</button>
+    <button class="btn-1" data-modal-target="modal-1">modal-1</button>
+    <button class="btn-2" data-modal-target="modal-2">modal-2</button>
   </div>
 
-  <div class="modal modal--transitionable">
+  <div class="modal modal--transitionable modal-1">
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__container">
+      1
+    </div>
+  </div>
+  <div class="modal modal-2">
     <div class="modal__backdrop" data-modal-close></div>
     <div class="modal__container">
       1

@@ -117,4 +117,5 @@ export interface I_ModalConfig {
 export interface I_ModalDisplayConfig {
   // animation?:     boolean;
   // ignoreEvents?:  boolean;
+  force?: boolean;
 }
