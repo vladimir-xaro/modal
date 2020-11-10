@@ -6,10 +6,10 @@ export default class Modal implements I_Modal {
   static blurEl:          Element | null  = null;
   static lastUndefinedId: number          = 0;
 
-  emitter:  I_EventEmitter;
-  config!:  I_ModalConfig;
+  protected pending:      boolean         = false;
 
-  pending:  boolean = false;
+  emitter:  I_EventEmitter;
+  config:   I_ModalConfig;
 
   animation: { container: boolean, backdrop: boolean } = {
     container:  false,
@@ -43,7 +43,7 @@ export default class Modal implements I_Modal {
       selector: {
         container:        '.modal__container',
         backdrop:         '.modal__backdrop',
-        closeBtn:         '.modal__btn-close'
+        btnClose:         '.modal__btn-close'
       },
       classes: {
         visible:          'modal--visible',
@@ -183,6 +183,7 @@ export default class Modal implements I_Modal {
     document.removeEventListener('keyup', this.__closeEscListener);
   }
 
+
   /** show/hide animation end callback */
   protected animationEndCallback(key1: string, key2: string, hide: boolean, event: AnimationEvent) {
     this.animation[key1] = false;
@@ -199,6 +200,7 @@ export default class Modal implements I_Modal {
 
     this.emitter.emit('after' + hide ? 'Hide' : 'Show', this, event);
   }
+
 
   /** show/hide transition end callback */
   protected transitionEndCallback(key1: string, key2: string, hide: boolean, event: TransitionEvent) {
@@ -367,7 +369,7 @@ export default class Modal implements I_Modal {
     }
   }
 
-  toggle() {
-    this.config.visible ? this.hide() : this.show();
+  toggle(config?: I_ModalDisplayConfig) {
+    this.config.visible ? this.hide(config) : this.show(config);
   }
 }

@@ -1,21 +1,21 @@
 import { I_EventEmitter } from "@xaro/event-emitter";
 
-/** Tabs */
+/** Modal */
 export interface I_Modal {
   emitter:  I_EventEmitter;
   config:   I_ModalConfig;
-  pending:  boolean;
   animation: { container: boolean, backdrop: boolean };
 
   show(config?: I_ModalDisplayConfig): void;
   hide(config?: I_ModalDisplayConfig): void;
+  toggle(config?: I_ModalDisplayConfig): void;
 }
 
 export interface I_ModalConstructorConfig {
   id?:          string;
   el:           HTMLElement;
   visible?:     boolean;
-  animations?:  boolean;  // OR transtions
+  animations?:  boolean;  // OR transtions (priority, default)
   transitions?: boolean;  // OR animations
   attr?: {
     close?:             string;
@@ -31,7 +31,7 @@ export interface I_ModalConstructorConfig {
   selector?: {
     container?:         string;
     backdrop?:          string;
-    close?:             string;
+    btnClose?:          string;
   };
   classes?: {
     visible?:           string;
@@ -58,7 +58,6 @@ export interface I_ModalConstructorConfig {
       };
     };
   };
-
 
   on?: {
     init?:            (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
@@ -95,7 +94,7 @@ export interface I_ModalConfig {
   selector: {
     container:        string;
     backdrop:         string;
-    close:            string;
+    btnClose:         string;
   };
   classes: {
     visible:          string;

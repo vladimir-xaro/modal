@@ -291,7 +291,7 @@ class Modal {
             selector: {
                 container: '.modal__container',
                 backdrop: '.modal__backdrop',
-                closeBtn: '.modal__btn-close'
+                btnClose: '.modal__btn-close'
             },
             classes: {
                 visible: 'modal--visible',
@@ -563,8 +563,8 @@ class Modal {
             el.classList.remove(this.config.classes.visible);
         }
     }
-    toggle() {
-        this.config.visible ? this.hide() : this.show();
+    toggle(config) {
+        this.config.visible ? this.hide(config) : this.show(config);
     }
 }
 Modal.blurEl = null;
