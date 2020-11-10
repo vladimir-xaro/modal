@@ -16,6 +16,11 @@ export default class Modal implements I_Modal {
     backdrop:   false
   };
 
+  timeout: { container?: number, backdrop?: number } = {
+    container:  undefined,
+    backdrop:   undefined
+  };
+
   constructor(config: I_ModalConstructorConfig) {
     this.emitter    = new EventEmitter(config.on);
 
@@ -27,14 +32,25 @@ export default class Modal implements I_Modal {
         container:    null
       },
       visible:      false,
-      animations:   true,
+      animations:   false,
       transitions:  false,
       attr: {
         close:            'data-modal-close',
         target:           'data-modal-target',
         id:               'data-modal-id',
       },
+      timeout: {
+        container: {
+          animations:       0,
+          transitions:      100,
+        },
+        backdrop: {
+          animations:       0,
+          transitions:      50,
+        }
+      },
       allow: {
+        bodyScroll:       false,
         closeEsc:         true,
         closeAttr:        true,
         animateContainer: true,
@@ -72,6 +88,10 @@ export default class Modal implements I_Modal {
       }
     }, config);
 
+    if (typeof config.el === 'string') {
+      this.config.el = document.querySelector(config.el) as HTMLElement;
+    }
+
     if (! this.config.el) {
       throw new Error("Element does not exists");
     }
@@ -95,6 +115,10 @@ export default class Modal implements I_Modal {
 
     this.__closeAttrListener              = this.__closeAttrListener.bind(this);
     this.__closeEscListener               = this.__closeEscListener.bind(this);
+
+    if (!this.config.animations && !this.config.transitions) {
+      this.config.animations = true;
+    }
 
     if (this.config.animations) {
       this.__containerAnimationEndListener  = this.__containerAnimationEndListener.bind(this);
@@ -220,10 +244,20 @@ export default class Modal implements I_Modal {
   }
 
 
+  /**
+   * Show modal
+   * @param config I_ModalDisplayConfig
+   */
   show(config?: I_ModalDisplayConfig) {
     if (this.config.visible) {
       if (! config?.force) {
         return;
+      }
+    }
+
+    for (const key in this.timeout) {
+      if (this.timeout[key]) {
+        clearTimeout(this.timeout[key]);
       }
     }
 
@@ -240,6 +274,7 @@ export default class Modal implements I_Modal {
         backdrop?.classList.add(this.config.classes.transition.cancel);
       }
       this.emitter.unsubscribe('containerAnimationEnd', 'backdropAnimationEnd');
+      this.emitter.unsubscribe('containerTransitionEnd', 'backdropTransitionEnd');
     }
 
     this.emitter.emit('beforeShow', this);
@@ -266,24 +301,50 @@ export default class Modal implements I_Modal {
     
     if (this.config.animations) {
       this.animation.container = true;
-      container.classList.add(this.config.classes.animation.show.container);
+      if (+this.config.timeout.container.animations > 0) {
+        this.timeout.container = setTimeout(() => {
+          container.classList.add(this.config.classes.animation.show.container);
+        }, this.config.timeout.container.animations);
+      } else {
+        container.classList.add(this.config.classes.animation.show.container);
+      }
       if (backdrop) {
         this.animation.backdrop = true;
-        backdrop.classList.add(this.config.classes.animation.show.backdrop);
+        if (+this.config.timeout.backdrop.animations > 0) {
+          this.timeout.backdrop = setTimeout(() => {
+            backdrop.classList.add(this.config.classes.animation.show.backdrop);
+          }, this.config.timeout.backdrop.animations);
+        } else {
+          backdrop.classList.add(this.config.classes.animation.show.backdrop);
+        }
       }
     } else if (this.config.transitions) {
       this.animation.container = true;
-      container.classList.add(this.config.classes.transition.show.container);
+      if (+this.config.timeout.container.transitions > 0) {
+        this.timeout.container = setTimeout(() => {
+          container.classList.add(this.config.classes.transition.show.container);
+        }, this.config.timeout.container.transitions);
+      } else {
+        container.classList.add(this.config.classes.transition.show.container);
+      }
       if (backdrop) {
         this.animation.backdrop = true;
-        backdrop.classList.add(this.config.classes.transition.show.backdrop);
+        if (+this.config.timeout.backdrop.transitions > 0) {
+          this.timeout.backdrop = setTimeout(() => {
+            backdrop.classList.add(this.config.classes.transition.show.backdrop);
+          }, this.config.timeout.backdrop.transitions);
+        } else {
+          backdrop.classList.add(this.config.classes.transition.show.backdrop);
+        }
       }
     }
 
     this.addListeners();
 
-    document.body.style.overflow  = 'hidden';
-    document.body.style.height    = '100vh';
+    if (! this.config.allow.bodyScroll) {
+      document.body.style.overflow  = 'hidden';
+      document.body.style.height    = '100vh';
+    }
 
     if (this.config.animations) {
       this.emitter.once('containerAnimationEnd', event => this.animationEndCallback('container', 'backdrop', false, event));
@@ -304,6 +365,12 @@ export default class Modal implements I_Modal {
       }
     }
 
+    for (const key in this.timeout) {
+      if (this.timeout[key]) {
+        clearTimeout(this.timeout[key]);
+      }
+    }
+
     const el        = this.config.el;
     const container = this.config.dom.container;
     const backdrop  = this.config.dom.backdrop;
@@ -317,6 +384,7 @@ export default class Modal implements I_Modal {
         backdrop?.classList.add(this.config.classes.transition.cancel);
       }
       this.emitter.unsubscribe('containerAnimationEnd', 'backdropAnimationEnd');
+      this.emitter.unsubscribe('containerTransitionEnd', 'backdropTransitionEnd');
       this.pending = false;
     }
 
@@ -354,8 +422,10 @@ export default class Modal implements I_Modal {
     }
     Modal.blurEl = null;
 
-    document.body.style.overflow  = '';
-    document.body.style.height    = '';
+    if (! this.config.allow.bodyScroll) {
+      document.body.style.overflow  = '';
+      document.body.style.height    = '';
+    }
 
     if (this.config.animations) {
       this.emitter.once('backdropAnimationEnd', event => this.animationEndCallback('backdrop', 'container', true, event));

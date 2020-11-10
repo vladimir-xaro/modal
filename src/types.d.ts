@@ -5,6 +5,7 @@ export interface I_Modal {
   emitter:  I_EventEmitter;
   config:   I_ModalConfig;
   animation: { container: boolean, backdrop: boolean };
+  timeout: { container?: number, backdrop?: number };
 
   show(config?: I_ModalDisplayConfig): void;
   hide(config?: I_ModalDisplayConfig): void;
@@ -13,7 +14,7 @@ export interface I_Modal {
 
 export interface I_ModalConstructorConfig {
   id?:          string;
-  el:           HTMLElement;
+  el:           HTMLElement | string;
   visible?:     boolean;
   animations?:  boolean;  // OR transtions (priority, default)
   transitions?: boolean;  // OR animations
@@ -22,7 +23,18 @@ export interface I_ModalConstructorConfig {
     target?:            string;
     id?:                string;
   };
+  timeout?: {
+    container?: {
+      animations?:        number;
+      transitions?:       number;
+    };
+    backdrop?: {
+      animations?:        number;
+      transitions?:       number;
+    };
+  };
   allow?: {
+    bodyScroll?:        boolean;
     closeEsc?:          boolean;
     closeAttr?:         boolean;
     animateContainer?:  boolean;
@@ -47,14 +59,14 @@ export interface I_ModalConstructorConfig {
       };
     };
     transition?: {
-      cancel?:          string;
+      cancel?:            string;
       show?: {
-        container?:       string;
-        backdrop?:        string;
+        container?:         string;
+        backdrop?:          string;
       };
       hide?: {
-        container?:       string;
-        backdrop?:        string;
+        container?:         string;
+        backdrop?:          string;
       };
     };
   };
@@ -80,12 +92,23 @@ export interface I_ModalConfig {
   visible:      boolean;
   animations:   boolean;
   transitions:  boolean;
+  timeout: {
+    container: {
+      animations:     number;
+      transitions:    number;
+    };
+    backdrop: {
+      animations:     number;
+      transitions:    number;
+    };
+  };
   attr: {
     close:            string;
     target:           string;
     id:               string;
   };
   allow: {
+    bodyScroll:       boolean;
     closeEsc:         boolean;
     closeAttr:        boolean;
     animateContainer: boolean;

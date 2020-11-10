@@ -53,7 +53,7 @@ body {
 
 .modal {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -62,15 +62,6 @@ body {
   max-height: 100%;
   justify-content: center;
   align-items: center;
-}
-.modal--transitionable .modal__container {
-  opacity: 0;
-  transform: translateY(-100px);
-  transition-duration: 300ms;
-}
-.modal--transitionable .modal__backdrop {
-  opacity: 0;
-  transition-duration: 200ms;
 }
 .modal--visible {
   display: flex;
@@ -90,22 +81,6 @@ body {
 .modal-animation--cancel {
   animation: none !important;
 }
-.modal-transition-backdrop--show {
-  opacity: 1;
-}
-.modal-transition-backdrop--hide {
-  opacity: 0;
-}
-.modal-transition-container--show {
-  opacity: 1;
-}
-.modal-transition-container--hide {
-  opacity: 0;
-  transform: translateY(100px);
-}
-.modal-transition--cancel {
-  transition: none !important;
-}
 .modal__backdrop {
   position: absolute;
   top: 0;
@@ -113,6 +88,26 @@ body {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition-duration: 300ms;
+}
+.modal__backdrop.modal-animation-backdrop--show {
+  animation: fadeIn 200ms linear both;
+}
+.modal__backdrop.modal-animation-backdrop--hide {
+  animation: fadeOut 200ms linear both;
+}
+.modal__backdrop.modal-animation--cancel {
+  animation: none !important;
+}
+.modal__backdrop.modal-transition-backdrop--show {
+  opacity: 1;
+}
+.modal__backdrop.modal-transition-backdrop--hide {
+  opacity: 0;
+}
+.modal__backdrop.modal-transition--cancel {
+  transition: none !important;
 }
 .modal__container {
   position: relative;
@@ -120,6 +115,29 @@ body {
   height: 500px;
   border: solid 1px black;
   background-color: #fff;
+  opacity: 0;
+  transform: translateY(-100px);
+  transition-duration: 300ms;
+}
+.modal__container.modal-animation-container--show {
+  animation: translateIn 300ms linear both;
+}
+.modal__container.modal-animation-container--hide {
+  animation: translateOut 300ms linear both;
+}
+.modal__container.modal-animation--cancel {
+  animation: none !important;
+}
+.modal__container.modal-transition-container--show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.modal__container.modal-transition-container--hide {
+  opacity: 0;
+  transform: translateY(100px);
+}
+.modal__container.modal-transition--cancel {
+  transition: none !important;
 }
 
 /*# sourceMappingURL=Modal.css.map*/
