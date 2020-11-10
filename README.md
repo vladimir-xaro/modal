@@ -45,7 +45,7 @@ interface I_ModalConstructorConfig {
   id?:          string;                 // for data attr target
   el:           HTMLElement | string;   // main wrapper
   visible?:     boolean;                // show after init
-  animations?:  boolean;                // XOR transtions (priority, default)
+  animations?:  boolean;                // XOR transitions (priority, default)
   transitions?: boolean;                // XOR animations
   attr?: {
     close?:             string;         // add close listeners
