@@ -12,11 +12,16 @@ export interface I_Modal {
 }
 
 export interface I_ModalConstructorConfig {
+  id?:          string;
   el:           HTMLElement;
   visible?:     boolean;
   animations?:  boolean;  // OR transtions
   transitions?: boolean;  // OR animations
-  closeAttr?:   string;
+  attr?: {
+    close?:             string;
+    target?:            string;
+    id?:                string;
+  };
   allow?: {
     closeEsc?:          boolean;
     closeAttr?:         boolean;
@@ -67,6 +72,7 @@ export interface I_ModalConstructorConfig {
 }
 
 export interface I_ModalConfig {
+  id:           string;
   el:           HTMLElement;
   dom: {
     backdrop:         HTMLElement | null,
@@ -75,7 +81,11 @@ export interface I_ModalConfig {
   visible:      boolean;
   animations:   boolean;
   transitions:  boolean;
-  closeAttr:    string;
+  attr: {
+    close:            string;
+    target:           string;
+    id:               string;
+  };
   allow: {
     closeEsc:         boolean;
     closeAttr:        boolean;

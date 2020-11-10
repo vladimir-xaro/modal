@@ -3,7 +3,8 @@ import EventEmitter, { I_EventEmitter } from "@xaro/event-emitter";
 import extend from "@xaro/extend";
 
 export default class Modal implements I_Modal {
-  static blurEl: Element | null = null;
+  static blurEl:          Element | null  = null;
+  static lastUndefinedId: number          = 0;
 
   emitter:  I_EventEmitter;
   config!:  I_ModalConfig;
@@ -19,6 +20,7 @@ export default class Modal implements I_Modal {
     this.emitter    = new EventEmitter(config.on);
 
     this.config     = extend({
+      id:           null,
       el:           null,
       dom: {
         backdrop:     null,
@@ -27,7 +29,11 @@ export default class Modal implements I_Modal {
       visible:      false,
       animations:   true,
       transitions:  false,
-      closeAttr:    'data-modal-close',
+      attr: {
+        close:            'data-modal-close',
+        target:           'data-modal-target',
+        id:               'data-modal-id',
+      },
       allow: {
         closeEsc:         true,
         closeAttr:        true,
@@ -70,6 +76,10 @@ export default class Modal implements I_Modal {
       throw new Error("Element does not exists");
     }
 
+    if (! this.config.id) {
+      this.config.id = this.config.el.getAttribute(this.config.attr.id) || 'modal-' + Modal.lastUndefinedId++;
+    }
+
     if (! this.config.dom.backdrop) {
       this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
     }
@@ -98,6 +108,13 @@ export default class Modal implements I_Modal {
 
       this.config.dom.container.addEventListener('transitionend', this.__containerTransitionEndListener);
       this.config.dom.backdrop?.addEventListener('transitionend', this.__backdropTransitionEndListener);
+    }
+
+    // trigger attr
+    for (const el of document.querySelectorAll(`[${this.config.attr.target}]`)) {
+      if (el.getAttribute(this.config.attr.target) === this.config.id) {
+        el.addEventListener('click', () => this.show());
+      }
     }
 
     if (this.config.visible) {
@@ -146,7 +163,7 @@ export default class Modal implements I_Modal {
   /** Add DOM Event Listeners */
   protected addListeners(): void {
     // attr
-    const closeEls = this.config.el.querySelectorAll(`[${this.config.closeAttr}]`);
+    const closeEls = this.config.el.querySelectorAll(`[${this.config.attr.close}]`);
     for (const el of closeEls) {
       el.addEventListener('click', this.__closeAttrListener as EventListener);
     }
@@ -158,7 +175,7 @@ export default class Modal implements I_Modal {
   /** Remove DOM Event Listeners */
   protected removeListeners(): void {
     // attr
-    const closeEls = this.config.el.querySelectorAll(`[${this.config.closeAttr}]`);
+    const closeEls = this.config.el.querySelectorAll(`[${this.config.attr.close}]`);
     for (const el of closeEls) {
       el.removeEventListener('click', this.__closeAttrListener as EventListener);
     }

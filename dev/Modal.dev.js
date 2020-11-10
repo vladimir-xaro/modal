@@ -268,6 +268,7 @@ class Modal {
         };
         this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default(config.on);
         this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)({
+            id: null,
             el: null,
             dom: {
                 backdrop: null,
@@ -276,7 +277,11 @@ class Modal {
             visible: false,
             animations: true,
             transitions: false,
-            closeAttr: 'data-modal-close',
+            attr: {
+                close: 'data-modal-close',
+                target: 'data-modal-target',
+                id: 'data-modal-id',
+            },
             allow: {
                 closeEsc: true,
                 closeAttr: true,
@@ -317,6 +322,9 @@ class Modal {
         if (!this.config.el) {
             throw new Error("Element does not exists");
         }
+        if (!this.config.id) {
+            this.config.id = this.config.el.getAttribute(this.config.attr.id) || 'modal-' + Modal.lastUndefinedId++;
+        }
         if (!this.config.dom.backdrop) {
             this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
         }
@@ -340,6 +348,12 @@ class Modal {
             this.__backdropTransitionEndListener = this.__backdropTransitionEndListener.bind(this);
             this.config.dom.container.addEventListener('transitionend', this.__containerTransitionEndListener);
             this.config.dom.backdrop?.addEventListener('transitionend', this.__backdropTransitionEndListener);
+        }
+        // trigger attr
+        for (const el of document.querySelectorAll(`[${this.config.attr.target}]`)) {
+            if (el.getAttribute(this.config.attr.target) === this.config.id) {
+                el.addEventListener('click', () => this.show());
+            }
         }
         if (this.config.visible) {
             this.show({ force: true });
@@ -375,7 +389,7 @@ class Modal {
     /** Add DOM Event Listeners */
     addListeners() {
         // attr
-        const closeEls = this.config.el.querySelectorAll(`[${this.config.closeAttr}]`);
+        const closeEls = this.config.el.querySelectorAll(`[${this.config.attr.close}]`);
         for (const el of closeEls) {
             el.addEventListener('click', this.__closeAttrListener);
         }
@@ -385,7 +399,7 @@ class Modal {
     /** Remove DOM Event Listeners */
     removeListeners() {
         // attr
-        const closeEls = this.config.el.querySelectorAll(`[${this.config.closeAttr}]`);
+        const closeEls = this.config.el.querySelectorAll(`[${this.config.attr.close}]`);
         for (const el of closeEls) {
             el.removeEventListener('click', this.__closeAttrListener);
         }
@@ -554,6 +568,7 @@ class Modal {
     }
 }
 Modal.blurEl = null;
+Modal.lastUndefinedId = 0;
 
 
 /***/ }),
@@ -580,12 +595,12 @@ const modal2 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
     el: document.querySelector('.modal-2'),
     animations: true,
 });
-document.querySelector('.btn-1')?.addEventListener('click', () => {
-    modal1.show();
-});
-document.querySelector('.btn-2')?.addEventListener('click', () => {
-    modal2.show();
-});
+// document.querySelector('.btn-1')?.addEventListener('click', () => {
+//   modal1.show();
+// });
+// document.querySelector('.btn-2')?.addEventListener('click', () => {
+//   modal2.show();
+// });
 window.modal1 = modal1;
 window.modal2 = modal2;
 
