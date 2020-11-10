@@ -266,6 +266,10 @@ class Modal {
             container: false,
             backdrop: false
         };
+        this.timeout = {
+            container: undefined,
+            backdrop: undefined
+        };
         this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default(config.on);
         this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)({
             id: null,
@@ -275,14 +279,25 @@ class Modal {
                 container: null
             },
             visible: false,
-            animations: true,
+            animations: false,
             transitions: false,
             attr: {
                 close: 'data-modal-close',
                 target: 'data-modal-target',
                 id: 'data-modal-id',
             },
+            timeout: {
+                container: {
+                    animations: 0,
+                    transitions: 100,
+                },
+                backdrop: {
+                    animations: 0,
+                    transitions: 50,
+                }
+            },
             allow: {
+                bodyScroll: false,
                 closeEsc: true,
                 closeAttr: true,
                 animateContainer: true,
@@ -319,6 +334,9 @@ class Modal {
                 }
             }
         }, config);
+        if (typeof config.el === 'string') {
+            this.config.el = document.querySelector(config.el);
+        }
         if (!this.config.el) {
             throw new Error("Element does not exists");
         }
@@ -337,6 +355,9 @@ class Modal {
         }
         this.__closeAttrListener = this.__closeAttrListener.bind(this);
         this.__closeEscListener = this.__closeEscListener.bind(this);
+        if (!this.config.animations && !this.config.transitions) {
+            this.config.animations = true;
+        }
         if (this.config.animations) {
             this.__containerAnimationEndListener = this.__containerAnimationEndListener.bind(this);
             this.__backdropAnimationEndListener = this.__backdropAnimationEndListener.bind(this);
@@ -430,10 +451,19 @@ class Modal {
         }
         this.emitter.emit('after' + hide ? 'Hide' : 0, this, event);
     }
+    /**
+     * Show modal
+     * @param config I_ModalDisplayConfig
+     */
     show(config) {
         if (this.config.visible) {
             if (!config?.force) {
                 return;
+            }
+        }
+        for (const key in this.timeout) {
+            if (this.timeout[key]) {
+                clearTimeout(this.timeout[key]);
             }
         }
         const el = this.config.el;
@@ -449,6 +479,7 @@ class Modal {
                 backdrop?.classList.add(this.config.classes.transition.cancel);
             }
             this.emitter.unsubscribe('containerAnimationEnd', 'backdropAnimationEnd');
+            this.emitter.unsubscribe('containerTransitionEnd', 'backdropTransitionEnd');
         }
         this.emitter.emit('beforeShow', this);
         this.config.visible = true;
@@ -469,23 +500,53 @@ class Modal {
         el.classList.add(this.config.classes.visible);
         if (this.config.animations) {
             this.animation.container = true;
-            container.classList.add(this.config.classes.animation.show.container);
+            if (+this.config.timeout.container.animations > 0) {
+                this.timeout.container = setTimeout(() => {
+                    container.classList.add(this.config.classes.animation.show.container);
+                }, this.config.timeout.container.animations);
+            }
+            else {
+                container.classList.add(this.config.classes.animation.show.container);
+            }
             if (backdrop) {
                 this.animation.backdrop = true;
-                backdrop.classList.add(this.config.classes.animation.show.backdrop);
+                if (+this.config.timeout.backdrop.animations > 0) {
+                    this.timeout.backdrop = setTimeout(() => {
+                        backdrop.classList.add(this.config.classes.animation.show.backdrop);
+                    }, this.config.timeout.backdrop.animations);
+                }
+                else {
+                    backdrop.classList.add(this.config.classes.animation.show.backdrop);
+                }
             }
         }
         else if (this.config.transitions) {
             this.animation.container = true;
-            container.classList.add(this.config.classes.transition.show.container);
+            if (+this.config.timeout.container.transitions > 0) {
+                this.timeout.container = setTimeout(() => {
+                    container.classList.add(this.config.classes.transition.show.container);
+                }, this.config.timeout.container.transitions);
+            }
+            else {
+                container.classList.add(this.config.classes.transition.show.container);
+            }
             if (backdrop) {
                 this.animation.backdrop = true;
-                backdrop.classList.add(this.config.classes.transition.show.backdrop);
+                if (+this.config.timeout.backdrop.transitions > 0) {
+                    this.timeout.backdrop = setTimeout(() => {
+                        backdrop.classList.add(this.config.classes.transition.show.backdrop);
+                    }, this.config.timeout.backdrop.transitions);
+                }
+                else {
+                    backdrop.classList.add(this.config.classes.transition.show.backdrop);
+                }
             }
         }
         this.addListeners();
-        document.body.style.overflow = 'hidden';
-        document.body.style.height = '100vh';
+        if (!this.config.allow.bodyScroll) {
+            document.body.style.overflow = 'hidden';
+            document.body.style.height = '100vh';
+        }
         if (this.config.animations) {
             this.emitter.once('containerAnimationEnd', event => this.animationEndCallback('container', 'backdrop', false, event));
             this.emitter.once('backdropAnimationEnd', event => this.animationEndCallback('backdrop', 'container', false, event));
@@ -504,6 +565,11 @@ class Modal {
                 return;
             }
         }
+        for (const key in this.timeout) {
+            if (this.timeout[key]) {
+                clearTimeout(this.timeout[key]);
+            }
+        }
         const el = this.config.el;
         const container = this.config.dom.container;
         const backdrop = this.config.dom.backdrop;
@@ -517,6 +583,7 @@ class Modal {
                 backdrop?.classList.add(this.config.classes.transition.cancel);
             }
             this.emitter.unsubscribe('containerAnimationEnd', 'backdropAnimationEnd');
+            this.emitter.unsubscribe('containerTransitionEnd', 'backdropTransitionEnd');
             this.pending = false;
         }
         this.emitter.emit('beforeHide', this);
@@ -548,8 +615,10 @@ class Modal {
             Modal.blurEl.focus();
         }
         Modal.blurEl = null;
-        document.body.style.overflow = '';
-        document.body.style.height = '';
+        if (!this.config.allow.bodyScroll) {
+            document.body.style.overflow = '';
+            document.body.style.height = '';
+        }
         if (this.config.animations) {
             this.emitter.once('backdropAnimationEnd', event => this.animationEndCallback('backdrop', 'container', true, event));
             this.emitter.once('containerAnimationEnd', event => this.animationEndCallback('container', 'backdrop', true, event));
@@ -588,13 +657,28 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 const modal1 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
-    el: document.querySelector('.modal-1'),
+    // el: document.querySelector('.modal-1') as HTMLElement,
+    el: '.modal-1',
     transitions: true,
+    timeout: {
+        container: {
+            animations: 100,
+            transitions: 250
+        },
+        backdrop: {
+            animations: 0,
+            transitions: 50
+        },
+    },
+    allow: {
+        bodyScroll: true,
+    }
+    // visible: true,
 });
-const modal2 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
-    el: document.querySelector('.modal-2'),
-    animations: true,
-});
+// const modal2 = new Modal({
+//   el: document.querySelector('.modal-2') as HTMLElement,
+//   animations: true,
+// });
 // document.querySelector('.btn-1')?.addEventListener('click', () => {
 //   modal1.show();
 // });
@@ -602,7 +686,7 @@ const modal2 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
 //   modal2.show();
 // });
 window.modal1 = modal1;
-window.modal2 = modal2;
+// (window as any).modal2 = modal2;
 
 
 /***/ }),
