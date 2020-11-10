@@ -6,22 +6,26 @@ TS Modal library with animations, transitions and events
 
 *file.html*
 ```html
-<div class="modal">
-	<div class="modal__backdrop" data-modal-close></div>
-	<div class="modal__container">
-		<button data-modal-close>Close</button>
-	</div>
+<!--head-->
+  <link rel="stylesheet" href="Modal.css">
+<!--/head-->
+<!--body-->
+<button data-modal-target="test-modal">
+<div class="modal" data-modal-id="test-modal">
+  <div class="modal__backdrop" data-modal-close></div>
+  <div class="modal__container">
+    <button data-modal-close>Close</button>
+  </div>
 </div>
+<!--/body-->
 ```
 *file.ts*
 ```ts
 import Modal from "@xaro/modal";
 
 const modal = new Modal({
-	el: document.querySelector('.modal') as HTMLElement
+  el: document.querySelector('.modal') as HTMLElement // OR '.modal'
 });
-
-modal.show();
 ```
 
 ## Interfaces
@@ -50,12 +54,12 @@ interface I_ModalConstructorConfig {
   };
   timeout?: {
     container?: {
-      animations?:        number;
-      transitions?:       number;
+      animations?:        number;       // add class with animation to container after %number% ms
+      transitions?:       number;       // add class with transitions to container after %number% ms
     };
     backdrop?: {
-      animations?:        number;
-      transitions?:       number;
+      animations?:        number;       // add class with animation to backdrop after %number% ms
+      transitions?:       number;       // add class with transition to backdrop after %number% ms
     };
   };
   allow?: {
