@@ -4,8 +4,6 @@ import { I_EventEmitter } from "@xaro/event-emitter";
 export interface I_Modal {
   emitter:  I_EventEmitter;
   config:   I_ModalConfig;
-  animation: { container: boolean, backdrop: boolean };
-  timeout: { container?: number, backdrop?: number };
 
   show(config?: I_ModalDisplayConfig): void;
   hide(config?: I_ModalDisplayConfig): void;
@@ -13,15 +11,15 @@ export interface I_Modal {
 }
 
 export interface I_ModalConstructorConfig {
-  id?:          string;
-  el:           HTMLElement | string;
-  visible?:     boolean;
-  animations?:  boolean;  // OR transtions (priority, default)
-  transitions?: boolean;  // OR animations
+  id?:          string;                 // for data attr target
+  el:           HTMLElement | string;   // main wrapper
+  visible?:     boolean;                // show after init
+  animations?:  boolean;                // XOR transtions (priority, default)
+  transitions?: boolean;                // XOR animations
   attr?: {
-    close?:             string;
-    target?:            string;
-    id?:                string;
+    close?:             string;         // add close listeners
+    target?:            string;         // open modal by
+    id?:                string;         // unique modal id
   };
   timeout?: {
     container?: {
@@ -34,39 +32,39 @@ export interface I_ModalConstructorConfig {
     };
   };
   allow?: {
-    bodyScroll?:        boolean;
-    closeEsc?:          boolean;
-    closeAttr?:         boolean;
-    animateContainer?:  boolean;
-    animateBackdrop?:   boolean;
+    bodyScroll?:        boolean;        // allow body scroll (default: false)
+    closeEsc?:          boolean;        // allow close modal by esc key (default: true)
+    closeAttr?:         boolean;        // allow close modal by [attr.close] (default: true)
+    animateContainer?:  boolean;        // modal will use css animations on fade in/out (default: true)
+    animateBackdrop?:   boolean;        // modal will use css transitions on fade in/out (default: true)
   };
   selector?: {
-    container?:         string;
-    backdrop?:          string;
-    btnClose?:          string;
+    container?:         string;         // default: '.modal__container'
+    backdrop?:          string;         // default: '.modal__backdrop'
+    btnClose?:          string;         // default: '.modal__btn-close'
   };
   classes?: {
-    visible?:           string;
+    visible?:           string;         // default: 'modal--visible'
     animation?: {
-      cancel?:            string;
+      cancel?:            string;       // default: 'modal-animation--cancel'
       show?: {
-        container?:         string;
-        backdrop?:          string;
+        container?:         string;     // default: 'modal-animation-container--show'
+        backdrop?:          string;     // default: 'modal-animation-backdrop--show'
       };
       hide?: {
-        container?:         string;
-        backdrop?:          string;
+        container?:         string;     // default: 'modal-animation-container--hide'
+        backdrop?:          string;     // default: 'modal-animation-backdrop--hide'
       };
     };
     transition?: {
-      cancel?:            string;
+      cancel?:            string;       // default: 'modal-transition--cancel'
       show?: {
-        container?:         string;
-        backdrop?:          string;
+        container?:         string;     // default: 'modal-transition-container--show'
+        backdrop?:          string;     // default: 'modal-transition-backdrop--show'
       };
       hide?: {
-        container?:         string;
-        backdrop?:          string;
+        container?:         string;     // default: 'modal-transition-container--hide'
+        backdrop?:          string;     // default: 'modal-transition-backdrop--hide'
       };
     };
   };

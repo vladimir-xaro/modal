@@ -8,18 +8,18 @@ export default class Modal implements I_Modal {
 
   protected pending:      boolean         = false;
 
-  emitter:  I_EventEmitter;
-  config:   I_ModalConfig;
-
-  animation: { container: boolean, backdrop: boolean } = {
+  protected animation: { container: boolean, backdrop: boolean } = {
     container:  false,
     backdrop:   false
   };
 
-  timeout: { container?: number, backdrop?: number } = {
+  protected timeout: { container?: number, backdrop?: number } = {
     container:  undefined,
     backdrop:   undefined
   };
+
+  emitter:  I_EventEmitter;
+  config:   I_ModalConfig;
 
   constructor(config: I_ModalConstructorConfig) {
     this.emitter    = new EventEmitter(config.on);
