@@ -1,13 +1,13 @@
 .DS_Store
 
-/build
-/dev
-/examples
+# /build
+# /dev
+# /examples
 /node_modules
-/tests
-/webpack
+# /tests
+# /webpack
 
-/src/index.dev.ts
-package-lock.json
+# /src/index.dev.ts
+# package-lock.json
 # tsconfig.json
-tsconfig.json.default
+# tsconfig.json.default
