@@ -5,11 +5,9 @@ export const defaults = {
   el:           null,
   dom: {
     backdrop:     null,
-    container:    null
+    container:    null,
   },
   visible:      false,
-  animations:   null,
-  transitions:  null,
   mutations: {
     container:  'animation',
     backdrop:   'animation',
@@ -33,13 +31,11 @@ export const defaults = {
     bodyScroll:       false,
     closeEsc:         true,
     closeAttr:        true,
-    animateContainer: true,
-    animateBackdrop:  true
   },
   selector: {
     container:        '.modal__container',
     backdrop:         '.modal__backdrop',
-    btnClose:         '.modal__btn-close'
+    btnClose:         '.modal__btn-close',
   },
   classes: {
     visible:          'modal--visible',
@@ -68,11 +64,11 @@ export const defaults = {
     common: {
       show: {
         container:        'modal-container--show',
-        backdrop:         'modal-backdrop--show'
+        backdrop:         'modal-backdrop--show',
       },
       hide: {
         container:        'modal-container--hide',
-        backdrop:         'modal-backdrop--hide'
+        backdrop:         'modal-backdrop--hide',
       }
     }
   }

@@ -20,13 +20,14 @@ export interface I_ModalConstructorConfig {
   }
   timeout?: {
     container?: {
-      animation?:        number;       // add class with animation to container after %number% ms (default: 0)
-      transition?:       number;       // add class with transitions to container after %number% ms (default: 100), preferably more than 50
-
+      animation?:       number;       // add class with animation to container after %number% ms (default: 0)
+      transition?:      number;       // add class with transitions to container after %number% ms (default: 100), preferably more than 50
+      // common?:          number;       // add class without animations to container after %number% ms (default: 0)
     };
     backdrop?: {
-      animation?:        number;       // add class with animation to backdrop after %number% ms (default: 0)
-      transition?:       number;       // add class with transition to backdrop after %number% ms (default: 50), preferably more than 50
+      animation?:       number;       // add class with animation to backdrop after %number% ms (default: 0)
+      transition?:      number;       // add class with transition to backdrop after %number% ms (default: 50), preferably more than 50
+      // common?:          number;       // add class without animations to backdrop after %number% ms (default: 0)
     };
   };
   attr?: {
@@ -38,8 +39,6 @@ export interface I_ModalConstructorConfig {
     bodyScroll?:        boolean;        // allow body scroll (default: false)
     closeEsc?:          boolean;        // allow close modal by esc key (default: true)
     closeAttr?:         boolean;        // allow close modal by [attr.close] (default: true)
-    animateContainer?:  boolean;        // modal will use css animations on fade in/out (default: true)
-    animateBackdrop?:   boolean;        // modal will use css transitions on fade in/out (default: true)
   };
   selector?: {
     container?:         string;         // default: '.modal__container'
@@ -124,8 +123,6 @@ export interface I_ModalConfig {
     bodyScroll:       boolean;
     closeEsc:         boolean;
     closeAttr:        boolean;
-    animateContainer: boolean;
-    animateBackdrop:  boolean;
   };
   selector: {
     container:        string;
@@ -170,7 +167,7 @@ export interface I_ModalConfig {
 }
 
 export interface I_ModalDisplayConfig {
-  force?: boolean;
+  force?: boolean;    // ignore current config.visible status
   // animation?:     boolean;
   // ignoreEvents?:  boolean;
 }

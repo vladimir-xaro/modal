@@ -156,9 +156,7 @@ export default class Modal implements I_Modal {
     
     this.pending = false;
     
-    console.log(`[${key1}] ${hide ? 'Hide' : 'Show'}`)
     if (hide) {
-      console.log('here')
       this.config.el.classList.remove(this.config.classes.visible);
     }
 
@@ -229,17 +227,23 @@ export default class Modal implements I_Modal {
       } else {
         container.classList.add(this.config.classes[key].show.container);
       }
+    } else {
+      container.classList.add(this.config.classes.common.show.container);
     }
-    if (backdrop && this.config.mutations.backdrop) {
-      const key = this.config.mutations.backdrop;
+    if (backdrop) {
+      if (this.config.mutations.backdrop) {
+        const key = this.config.mutations.backdrop;
 
-      this.animation.backdrop = true;
-      if (+this.config.timeout.backdrop[key] > 0) {
-        this.timeout.backdrop = setTimeout(() => {
+        this.animation.backdrop = true;
+        if (+this.config.timeout.backdrop[key] > 0) {
+          this.timeout.backdrop = setTimeout(() => {
+            backdrop.classList.add(this.config.classes[key].show.backdrop);
+          }, this.config.timeout.backdrop[key]);
+        } else {
           backdrop.classList.add(this.config.classes[key].show.backdrop);
-        }, this.config.timeout.backdrop[key]);
+        }
       } else {
-        backdrop.classList.add(this.config.classes[key].show.backdrop);
+        backdrop.classList.add(this.config.classes.common.show.backdrop);
       }
     }
 
@@ -257,7 +261,7 @@ export default class Modal implements I_Modal {
       this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', false, event));
     }
     if (!this.config.mutations.container && !this.config.mutations.backdrop) {
-      this.config.el.classList.remove(this.config.classes.visible);
+
       this.emitter.emit('afterShow', this);
     }
   }
@@ -306,12 +310,18 @@ export default class Modal implements I_Modal {
       this.animation.container = true;
       container.classList.remove(this.config.classes[key].show.container, this.config.classes[key].cancel);
       container.classList.add(this.config.classes[key].hide.container);
+    } else {
+      container.classList.remove(this.config.classes.common.show.container);
     }
-    if (backdrop && this.config.mutations.backdrop) {
-      const key = this.config.mutations.backdrop;
-      this.animation.backdrop = true;
-      backdrop.classList.remove(this.config.classes[key].show.backdrop, this.config.classes[key].cancel);
-      backdrop.classList.add(this.config.classes[key].hide.backdrop);
+    if (backdrop) {
+      if (this.config.mutations.backdrop) {
+        const key = this.config.mutations.backdrop;
+        this.animation.backdrop = true;
+        backdrop.classList.remove(this.config.classes[key].show.backdrop, this.config.classes[key].cancel);
+        backdrop.classList.add(this.config.classes[key].hide.backdrop);
+      } else {
+        backdrop.classList.remove(this.config.classes.common.show.backdrop);
+      }
     }
 
     if (Modal.blurEl) {

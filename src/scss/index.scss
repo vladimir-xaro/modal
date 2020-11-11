@@ -47,6 +47,17 @@ body {
   //   }
   // }
 
+  &--common {
+    #{$self} {
+      &__container {
+        transform: translateY(0);
+      }
+      &__backdrop {
+        transform: translateY(0);
+      }
+    }
+  }
+
   &--visible {
     display: flex;
   }
@@ -114,6 +125,26 @@ body {
     }
     &--cancel {
       transition: none !important;
+    }
+  }
+  &-container {
+    &--show {
+      opacity: 1;
+      transition-duration: 0ms;
+    }
+    &--hide {
+      opacity: 0;
+      transition-duration: 0ms;
+    }
+  }
+  &-backdrop {
+    &--show {
+      opacity: 1;
+      transition-duration: 0ms;
+    }
+    &--hide {
+      opacity: 0;
+      transition-duration: 0ms;
     }
   }
 }

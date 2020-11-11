@@ -63,6 +63,12 @@ body {
   justify-content: center;
   align-items: center;
 }
+.modal--common .modal__container {
+  transform: translateY(0);
+}
+.modal--common .modal__backdrop {
+  transform: translateY(0);
+}
 .modal--visible {
   display: flex;
 }
@@ -117,6 +123,22 @@ body {
 }
 .modal .modal-transition--cancel {
   transition: none !important;
+}
+.modal-container--show {
+  opacity: 1;
+  transition-duration: 0ms;
+}
+.modal-container--hide {
+  opacity: 0;
+  transition-duration: 0ms;
+}
+.modal-backdrop--show {
+  opacity: 1;
+  transition-duration: 0ms;
+}
+.modal-backdrop--hide {
+  opacity: 0;
+  transition-duration: 0ms;
 }
 
 /*# sourceMappingURL=Modal.css.map*/

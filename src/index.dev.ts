@@ -12,11 +12,6 @@ const modal1 = new Modal({
     container:  'transition',
     backdrop:   'transition',
   },
-  attr: {
-    close:  'data-close',
-    target: 'data-target',
-    id:     'data-id',
-  },
   timeout: {
     container: {
       animation:   100,
@@ -27,12 +22,17 @@ const modal1 = new Modal({
       transition:  50
     },
   },
+  attr: {
+    close:  'data-close',
+    target: 'data-target',
+    id:     'data-id',
+  },
   allow: {
     bodyScroll: true,
     // closeEsc:   false,
     // closeAttr:  false,
-    animateContainer: false,
-  }
+  },
+  
 });
 // const modal2 = new Modal({
 //   el: document.querySelector('.modal-2') as HTMLElement,

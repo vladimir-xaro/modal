@@ -377,9 +377,7 @@ class Modal {
             return;
         }
         this.pending = false;
-        console.log(`[${key1}] ${hide ? 'Hide' : 'Show'}`);
         if (hide) {
-            console.log('here');
             this.config.el.classList.remove(this.config.classes.visible);
         }
         this.emitter.emit('after' + hide ? 'Hide' : 0, this, event);
@@ -439,16 +437,24 @@ class Modal {
                 container.classList.add(this.config.classes[key].show.container);
             }
         }
-        if (backdrop && this.config.mutations.backdrop) {
-            const key = this.config.mutations.backdrop;
-            this.animation.backdrop = true;
-            if (+this.config.timeout.backdrop[key] > 0) {
-                this.timeout.backdrop = setTimeout(() => {
+        else {
+            container.classList.add(this.config.classes.common.show.container);
+        }
+        if (backdrop) {
+            if (this.config.mutations.backdrop) {
+                const key = this.config.mutations.backdrop;
+                this.animation.backdrop = true;
+                if (+this.config.timeout.backdrop[key] > 0) {
+                    this.timeout.backdrop = setTimeout(() => {
+                        backdrop.classList.add(this.config.classes[key].show.backdrop);
+                    }, this.config.timeout.backdrop[key]);
+                }
+                else {
                     backdrop.classList.add(this.config.classes[key].show.backdrop);
-                }, this.config.timeout.backdrop[key]);
+                }
             }
             else {
-                backdrop.classList.add(this.config.classes[key].show.backdrop);
+                backdrop.classList.add(this.config.classes.common.show.backdrop);
             }
         }
         this.addListeners();
@@ -463,7 +469,6 @@ class Modal {
             this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', false, event));
         }
         if (!this.config.mutations.container && !this.config.mutations.backdrop) {
-            this.config.el.classList.remove(this.config.classes.visible);
             this.emitter.emit('afterShow', this);
         }
     }
@@ -504,11 +509,19 @@ class Modal {
             container.classList.remove(this.config.classes[key].show.container, this.config.classes[key].cancel);
             container.classList.add(this.config.classes[key].hide.container);
         }
-        if (backdrop && this.config.mutations.backdrop) {
-            const key = this.config.mutations.backdrop;
-            this.animation.backdrop = true;
-            backdrop.classList.remove(this.config.classes[key].show.backdrop, this.config.classes[key].cancel);
-            backdrop.classList.add(this.config.classes[key].hide.backdrop);
+        else {
+            container.classList.remove(this.config.classes.common.show.container);
+        }
+        if (backdrop) {
+            if (this.config.mutations.backdrop) {
+                const key = this.config.mutations.backdrop;
+                this.animation.backdrop = true;
+                backdrop.classList.remove(this.config.classes[key].show.backdrop, this.config.classes[key].cancel);
+                backdrop.classList.add(this.config.classes[key].hide.backdrop);
+            }
+            else {
+                backdrop.classList.remove(this.config.classes.common.show.backdrop);
+            }
         }
         if (Modal.blurEl) {
             Modal.blurEl.focus();
@@ -568,11 +581,6 @@ const modal1 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
         container: 'transition',
         backdrop: 'transition',
     },
-    attr: {
-        close: 'data-close',
-        target: 'data-target',
-        id: 'data-id',
-    },
     timeout: {
         container: {
             animation: 100,
@@ -583,12 +591,14 @@ const modal1 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
             transition: 50
         },
     },
+    attr: {
+        close: 'data-close',
+        target: 'data-target',
+        id: 'data-id',
+    },
     allow: {
         bodyScroll: true,
-        // closeEsc:   false,
-        // closeAttr:  false,
-        animateContainer: false,
-    }
+    },
 });
 // const modal2 = new Modal({
 //   el: document.querySelector('.modal-2') as HTMLElement,
@@ -645,11 +655,9 @@ const defaults = {
     el: null,
     dom: {
         backdrop: null,
-        container: null
+        container: null,
     },
     visible: false,
-    animations: null,
-    transitions: null,
     mutations: {
         container: 'animation',
         backdrop: 'animation',
@@ -673,13 +681,11 @@ const defaults = {
         bodyScroll: false,
         closeEsc: true,
         closeAttr: true,
-        animateContainer: true,
-        animateBackdrop: true
     },
     selector: {
         container: '.modal__container',
         backdrop: '.modal__backdrop',
-        btnClose: '.modal__btn-close'
+        btnClose: '.modal__btn-close',
     },
     classes: {
         visible: 'modal--visible',
@@ -708,11 +714,11 @@ const defaults = {
         common: {
             show: {
                 container: 'modal-container--show',
-                backdrop: 'modal-backdrop--show'
+                backdrop: 'modal-backdrop--show',
             },
             hide: {
                 container: 'modal-container--hide',
-                backdrop: 'modal-backdrop--hide'
+                backdrop: 'modal-backdrop--hide',
             }
         }
     }
