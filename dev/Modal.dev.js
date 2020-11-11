@@ -571,39 +571,82 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 const modal1 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
-    id: 'test',
-    // el: document.querySelector('.modal-1') as HTMLElement,
     el: '.modal-1',
-    // visible: true,
-    // animations: true,
-    // transitions: true,
     mutations: {
         container: 'transition',
-        backdrop: 'transition',
-    },
-    timeout: {
-        container: {
-            animation: 100,
-            transition: 250
-        },
-        backdrop: {
-            animation: 0,
-            transition: 50
-        },
-    },
-    attr: {
-        close: 'data-close',
-        target: 'data-target',
-        id: 'data-id',
-    },
-    allow: {
-        bodyScroll: true,
-    },
+        backdrop: 'transition'
+    }
 });
-// const modal2 = new Modal({
-//   el: document.querySelector('.modal-2') as HTMLElement,
-//   animations: true,
-// });
+const modal2 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-2',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal3 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-3',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal4 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-4',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal5 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-5',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal6 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-6',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal7 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-7',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal8 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-8',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal9 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-9',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal10 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-10',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
+const modal11 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
+    el: '.modal-11',
+    mutations: {
+        container: 'transition',
+        backdrop: 'transition'
+    }
+});
 // document.querySelector('.btn-1')?.addEventListener('click', () => {
 //   modal1.show();
 // });
