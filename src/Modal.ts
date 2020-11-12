@@ -19,6 +19,11 @@ export default class Modal implements I_Modal {
     backdrop:   undefined
   };
 
+  protected container: { animation: boolean, timeout: number | null } = {
+    animation:  false,
+    timeout:    null
+  }
+
   emitter:  I_EventEmitter;
   config:   I_ModalConfig;
 
@@ -70,8 +75,8 @@ export default class Modal implements I_Modal {
       this.config.dom.container.addEventListener(this.config.mutations.container + 'end', this.__containerMutationEndListener);
     }
     if (this.config.dom.backdrop && this.config.mutations.backdrop) {
-      this.__backdropMutationEndListener = this.__backdropMutationEndListener.bind(this);
-      this.config.dom.backdrop.addEventListener(this.config.mutations.backdrop + 'end', this.__backdropMutationEndListener);
+      // this.__backdropMutationEndListener = this.__backdropMutationEndListener.bind(this);
+      // this.config.dom.backdrop.addEventListener(this.config.mutations.backdrop + 'end', this.__backdropMutationEndListener);
     }
 
     // trigger attr
@@ -196,8 +201,13 @@ export default class Modal implements I_Modal {
       }
       if (backdrop && this.config.mutations.backdrop) {
         backdrop.classList.add(this.config.classes[this.config.mutations.backdrop].cancel);
+        // backdrop refactor
+        // this.backdrop.addClass(animationType, classType)
       }
       this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
+      // backdrop refactor
+      // this.emitter.unsubscribe('containerMutationEnd');
+      // this.backdrop.emitter.unsubscribe('mutationEnd');
     }
 
     this.emitter.emit('beforeShow', this);
@@ -218,6 +228,11 @@ export default class Modal implements I_Modal {
       const key = this.config.mutations.backdrop;
       backdrop.classList.remove(this.config.classes[key].hide.backdrop, this.config.classes[key].cancel);
     }
+    // backdrop refactor
+    // if (this.backdrop) {
+    // if (this.backdrop && this.config.mutations.backdrop) {
+    //   this.backdrop.removeClass()
+    // }
 
     el.classList.add(this.config.classes.visible);
 
