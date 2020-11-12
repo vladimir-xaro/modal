@@ -32,11 +32,13 @@ export default class Modal implements I_Modal {
     this.config   = extend({}, defaults, config);
 
     if (typeof config.el === 'string') {
-      this.config.el = document.querySelector(config.el) as HTMLElement;
-    }
+      const el = document.querySelector(config.el);
 
-    if (! this.config.el) {
-      throw new Error("Element does not exists");
+      if (! el) {
+        throw new Error("Element does not exists");
+      }
+
+      this.config.el = el;
     }
 
     if (! this.config.id) {
@@ -84,6 +86,9 @@ export default class Modal implements I_Modal {
     if (this.config.visible) {
       this.show({ force: true });
     }
+
+    // this.config.dom.backdrop?.addEventListener('mousewheel', (event) => console.log(event));
+    this.config.el.addEventListener('click', event => console.log(event));
   }
 
 

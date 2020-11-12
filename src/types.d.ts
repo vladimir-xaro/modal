@@ -12,8 +12,9 @@ export interface I_Modal {
 
 export interface I_ModalConstructorConfig {
   id?:          string;                 // for data attr target (or [data-modal-id], priority - object property)
-  el:           HTMLElement | string;   // main wrapper
+  el:           Element | string;       // main wrapper
   visible?:     boolean;                // show after init
+  // longContent?: boolean;                // adds scrolling styles for high content
   mutations?: {
     container?:         T_Mutation;     // container animation type
     backdrop?:          T_Mutation;     // backdrop animation type
@@ -94,12 +95,13 @@ export interface I_ModalConstructorConfig {
 
 export interface I_ModalConfig {
   id:           string;
-  el:           HTMLElement;
+  el:           Element;
   dom: {
-    backdrop:         HTMLElement | null,
-    container:        HTMLElement
+    backdrop:         Element | null,
+    container:        Element
   };
   visible:      boolean;
+  longContent:  boolean;
   mutations: {
     container:    T_Mutation;
     backdrop:     T_Mutation;

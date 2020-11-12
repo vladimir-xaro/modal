@@ -12,7 +12,7 @@ module.exports = merge(common, {
     publicPath:     '/',
     filename:       '[name].umd.js',
     library:        '[name]',
-    libraryTarget:  'umd',
+    // libraryTarget:  'umd',
   },
 
   optimization: {

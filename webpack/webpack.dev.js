@@ -7,7 +7,7 @@ module.exports = merge(common, {
   devtool:  'source-map',
 
   entry: {
-    Modal: __PATH.src + '/index.dev.ts'
+    Modal: __PATH.src + '/index.dev.ts',
   },
 
   output: {

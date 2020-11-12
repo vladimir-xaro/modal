@@ -33,8 +33,8 @@ export const defaults = {
     closeAttr:        true,
   },
   selector: {
-    container:        '.modal__container',
     backdrop:         '.modal__backdrop',
+    container:        '.modal__container',
     btnClose:         '.modal__btn-close',
   },
   classes: {
@@ -73,5 +73,3 @@ export const defaults = {
     }
   }
 };
-
-export const mutations: T_Mutation[] = [ 'animation', 'transition', false ];

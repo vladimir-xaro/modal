@@ -1,0 +1,136 @@
+@keyframes translateIn {
+  from {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes translateOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}
+
+.modal {
+  $self: &;
+
+  &__backdrop {
+  }
+  
+  &__container {
+    transform: translateY(-100px);
+    box-shadow: 5px 5px 15px -5px black;
+  }
+
+  &__btn-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    div {
+      position: absolute;
+      top: 48%;
+      left: -14%;
+      width: 130%;
+      height: 3px;
+      background-color: black;
+      border-radius: 2px;
+
+      &:first-child {
+        transform: rotate(45deg);
+      }
+      &:last-child {
+        transform: rotate(-45deg);
+      }
+    }
+  }
+
+  /** animation */
+  #{$self}-animation {
+    &-backdrop {
+      &--show {
+        animation: fadeIn 200ms linear both;
+      }
+      &--hide {
+        animation: fadeOut 200ms linear both;
+      }
+    }
+    &-container {
+      &--show {
+        animation: translateIn 300ms linear both;
+      }
+      &--hide {
+        animation: translateOut 300ms linear both;
+      }
+    }
+    &--cancel {
+      animation: none !important;
+    }
+  }
+
+
+  /** transition */
+  #{$self}-transition {
+    &-backdrop {
+      &--show {
+        opacity: 1;
+      }
+      &--hide {
+        opacity: 0;
+      }
+    }
+    &-container {
+      &--show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      &--hide {
+        opacity: 0;
+        transform: translateY(100px);
+      }
+    }
+    &--cancel {
+      transition: none !important;
+    }
+  }
+
+  /** common */
+  &-container {
+    &--show {
+      opacity: 1;
+      transition-duration: 0ms;
+      animation: none;
+    }
+    &--hide {
+      opacity: 0;
+      transition-duration: 0ms;
+      animation: none;
+    }
+  }
+  &-backdrop {
+    &--show {
+      opacity: 1;
+      transition-duration: 0ms;
+      animation: none;
+    }
+    &--hide {
+      opacity: 0;
+      transition-duration: 0ms;
+      animation: none;
+    }
+  }
+}
