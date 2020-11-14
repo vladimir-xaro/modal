@@ -1,0 +1,180 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+
+
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: rgba(black, 0.3);
+  transition-duration: 200ms;
+  z-index: 10000;
+
+  &--visible {
+    display: block;
+  }
+}
+
+.modal {
+  $self: &;
+
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 10001;
+
+  &--visible {
+    display: block;
+  }
+
+  &__container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    width: 400px;
+    margin: 30px auto;
+  }
+
+  &__container {
+    position: relative;
+    max-width: 100%;
+    padding: 30px 10px;
+    opacity: 0;
+    background-color: white;
+    transition-duration: 300ms;
+  }
+
+  &__btn-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    div {
+      position: absolute;
+      top: 48%;
+      left: -14%;
+      width: 130%;
+      height: 3px;
+      background-color: black;
+      border-radius: 2px;
+
+      &:first-child {
+        transform: rotate(45deg);
+      }
+      &:last-child {
+        transform: rotate(-45deg);
+      }
+    }
+  }
+}
+
+/** animations & transitions */
+.modal {
+  /** animation */
+  &-animation {
+    &-container {
+      &--show {
+        animation: fadeIn 300ms linear both;
+      }
+      &--hide {
+        animation: fadeOut 300ms linear both;
+      }
+    }
+    &-backdrop {
+      &--show {
+        animation: fadeIn 300ms linear both;
+      }
+      &--hide {
+        animation: fadeOut 300ms linear both;
+      }
+    }
+    &--cancel {
+      animation: none !important;
+    }
+  }
+
+
+  /** transition */
+  &-transition {
+    &-container {
+      &--show {
+        opacity: 1;
+      }
+      &--hide {
+        opacity: 0;
+      }
+    }
+    &-backdrop {
+      &--show {
+        opacity: 1;
+      }
+      &--hide {
+        opacity: 0;
+      }
+    }
+    &--cancel {
+      transition: none !important;
+    }
+  }
+
+  /** common */
+  &-container {
+    &--show {
+      opacity: 1;
+      transition-duration: 0ms;
+      animation: none;
+    }
+    &--hide {
+      opacity: 0;
+      transition-duration: 0ms;
+      animation: none;
+    }
+  }
+  &-backdrop {
+    &--show {
+      opacity: 1;
+      transition-duration: 0ms;
+      animation: none;
+    }
+    &--hide {
+      opacity: 0;
+      transition-duration: 0ms;
+      animation: none;
+    }
+  }
+}

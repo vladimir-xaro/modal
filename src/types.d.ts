@@ -10,78 +10,92 @@ export interface I_Modal {
   toggle(config?: I_ModalDisplayConfig): void;
 }
 
-export interface I_ModalConstructorConfig {
-  id?:          string;                 // for data attr target (or [data-modal-id], priority - object property)
-  el:           HTMLElement | string;   // main wrapper
-  visible?:     boolean;                // show after init
-  mutations?: {
-    container?:         T_Mutation;     // container animation type
-    backdrop?:          T_Mutation;     // backdrop animation type
-  }
-  timeout?: {
-    container?: {
-      animation?:        number;       // add class with animation to container after %number% ms (default: 0)
-      transition?:       number;       // add class with transitions to container after %number% ms (default: 100), preferably more than 50
-
-    };
-    backdrop?: {
-      animation?:        number;       // add class with animation to backdrop after %number% ms (default: 0)
-      transition?:       number;       // add class with transition to backdrop after %number% ms (default: 50), preferably more than 50
-    };
-  };
+export interface I_ModalConstructorConfig extends Object {
+  id?:      string;           // default increment number
+  el:       Element | string; // dom element or selector of modal container
+  visible?: boolean;          // force to show after init
   attr?: {
-    close?:             string;         // add close listeners
-    target?:            string;         // open modal by
-    id?:                string;         // unique modal id
+    close?:       string;     // close data-attribute (for mouse click)
+    target?:      string;     // modal trigger data-attribute
+    id?:          string;     // modal id data-attribute
   };
   allow?: {
-    bodyScroll?:        boolean;        // allow body scroll (default: false)
-    closeEsc?:          boolean;        // allow close modal by esc key (default: true)
-    closeAttr?:         boolean;        // allow close modal by [attr.close] (default: true)
-    animateContainer?:  boolean;        // modal will use css animations on fade in/out (default: true)
-    animateBackdrop?:   boolean;        // modal will use css transitions on fade in/out (default: true)
-  };
-  selector?: {
-    container?:         string;         // default: '.modal__container'
-    backdrop?:          string;         // default: '.modal__backdrop'
-    btnClose?:          string;         // default: '.modal__btn-close'
+    bodyScroll?:    boolean;  // allow body scroll while modal is show
+    closeEsc?:      boolean;  // allow close modal by escape key
+    closeAttr?:     boolean;  // allow close data-attribute
+    closeOutside?:  boolean;  // allow close when click outside container
   };
   classes?: {
-    visible?:           string;         // default: 'modal--visible'
+    visible?:     string;
+  };
+  timeouts?: {
     animation?: {
-      cancel?:            string;       // default: 'modal-animation--cancel'
-      show?: {
-        container?:         string;     // default: 'modal-animation-container--show'
-        backdrop?:          string;     // default: 'modal-animation-backdrop--show'
-      };
-      hide?: {
-        container?:         string;     // default: 'modal-animation-container--hide'
-        backdrop?:          string;     // default: 'modal-animation-backdrop--hide'
-      };
+      show?:  number;
+      hide?:  number;
     };
     transition?: {
-      cancel?:            string;       // default: 'modal-transition--cancel'
-      show?: {
-        container?:         string;     // default: 'modal-transition-container--show'
-        backdrop?:          string;     // default: 'modal-transition-backdrop--show'
-      };
-      hide?: {
-        container?:         string;     // default: 'modal-transition-container--hide'
-        backdrop?:          string;     // default: 'modal-transition-backdrop--hide'
-      };
+      show?:  number;
+      hide?:  number;
     };
-    common?: {
-      show?: {
-        container?:         string;     // default: 'modal-container--show'
-        backdrop?:          string;     // default: 'modal-backdrop--show'
-      };
-      hide?: {
-        container?:         string;     // default: 'modal-container--hide'
-        backdrop?:          string;     // default: 'modal-backdrop--hide'
+  };
+  container?: {
+    el?:          Element;
+    wrapper?:     Element;
+    mutation?:    T_Mutation;
+    animation?:   boolean;
+    timeouts?: {
+      animation?:   number;
+      transition?:  number;
+    };
+
+    properties?: {
+      selector?:    string;
+      classes?: {
+        animation?: {
+          cancel?:    string;
+          show?:      string;
+          hide?:      string;
+        };
+        transition?: {
+          cancel?:    string;
+          show?:      string;
+          hide?:      string;
+        };
+        common?: {
+          show?:      string;
+          hide?:      string;
+        };
       };
     };
   };
-
+  backdrop?: {
+    mutation?:    T_Mutation;
+    timeouts?: {
+      animation?:   number;
+      transition?:  number;
+    };
+    properties?: {
+      // selector?:    string;
+      mutation?:    T_Mutation;
+      classes?: {
+        visible?:     string;
+        animation?: {
+          cancel?:    string;
+          show?:      string;
+          hide?:      string;
+        };
+        transition?: {
+          cancel?:    string;
+          show?:      string;
+          hide?:      string;
+        };
+        common?: {
+          show?:      string;
+          hide?:      string;
+        };
+      };
+    };
+  };
   on?: {
     init?:            (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
     beforeHide?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
@@ -92,87 +106,126 @@ export interface I_ModalConstructorConfig {
     closeAttrClick?:  (modal: I_Modal, event?: MouseEvent) => void | ((modal: I_Modal, event?: MouseEvent) => void)[];
   };
 }
-
 export interface I_ModalConfig {
-  id:           string;
-  el:           HTMLElement;
-  dom: {
-    backdrop:         HTMLElement | null,
-    container:        HTMLElement
-  };
-  visible:      boolean;
-  mutations: {
-    container:    T_Mutation;
-    backdrop:     T_Mutation;
-  };
-  timeout: {
-    container: {
-      animation:     number;
-      transition:    number;
-    };
-    backdrop: {
-      animation:     number;
-      transition:    number;
-    };
-  };
+  id:       string;
+  el:       Element;
+  visible:  boolean;
   attr: {
-    close:            string;
-    target:           string;
-    id:               string;
+    close:      string;
+    target:     string;
+    id:         string;
   };
   allow: {
-    bodyScroll:       boolean;
-    closeEsc:         boolean;
-    closeAttr:        boolean;
-    animateContainer: boolean;
-    animateBackdrop:  boolean;
-  };
-  selector: {
-    container:        string;
-    backdrop:         string;
-    btnClose:         string;
+    bodyScroll:   boolean;
+    closeEsc:     boolean;
+    closeAttr:    boolean;
+    closeOutside: boolean;
   };
   classes: {
-    visible:          string;
-    animation: {
-      cancel:           string;
-      show: {
-        container:        string;
-        backdrop:         string;
-      };
-      hide: {
-        container:        string;
-        backdrop:         string;
-      };
+    visible:    string;
+  };
+  container: {
+    el:         Element;
+    wrapper:    Element;
+    mutation:   T_Mutation;
+    timeout:    number | null;
+    animation:  boolean;
+    timeouts: {
+      animation:    number;
+      transition:   number;
     };
-    transition: {
-      cancel:           string;
-      show: {
-        container:        string;
-        backdrop:         string;
-      };
-      hide: {
-        container:        string;
-        backdrop:         string;
-      };
-    };
-    common: {
-      show: {
-        container:       string;
-        backdrop:        string;
-      };
-      hide: {
-        container:       string;
-        backdrop:        string;
+
+    properties: {
+      selector:     string;
+      classes: {
+        animation: {
+          cancel:     string;
+          show:       string;
+          hide:       string;
+        };
+        transition: {
+          cancel:     string;
+          show:       string;
+          hide:       string;
+        };
+        common: {
+          show:       string;
+          hide:       string;
+        };
       };
     };
   };
+  backdrop: {
+    // el:         Element;
+    mutation:     T_Mutation;
+    timeouts: {
+      animation:    number;
+      transition:   number;
+    };
+    properties: {
+      classes: {
+        visible:      string;
+        animation: {
+          cancel:     string;
+          show:       string;
+          hide:       string;
+        };
+        transition: {
+          cancel:     string;
+          show:       string;
+          hide:       string;
+        };
+        common: {
+          show:       string;
+          hide:       string;
+        };
+      };
+    };
+  };
+
+  user: I_ModalConstructorConfig;
 }
 
 export interface I_ModalDisplayConfig {
-  force?: boolean;
+  force?: boolean;    // ignore current config.visible status
   // animation?:     boolean;
   // ignoreEvents?:  boolean;
+}
+
+/** Backdrop */
+export interface I_Backdrop {
+  emitter:  I_EventEmitter;
+  config:   I_BackdropConfig;
+
+  // mutationEndCallback(next?): void;
+}
+
+export interface I_BackdropConfig {
+  el:         Element;        // dom element
+  visible:    boolean;        // is displayed
+  mutation:   T_Mutation;     // current modal mutation
+  animation:  boolean;        // animation status
+  timeout:    number | null;  // timeout id or null
+  // user: User Config (constructor config)
+  properties: {
+    // selector:   string;
+    classes: {
+      animation: {
+        cancel:   string;
+        show:     string;
+        hide:     string;
+      };
+      transition: {
+        cancel:   string;
+        show:     string;
+        hide:     string;
+      };
+      common: {
+        show:     string;
+        hide:     string;
+      };
+    };
+  };
 }
 
 export type T_Mutation = 'animation' | 'transition' | false;

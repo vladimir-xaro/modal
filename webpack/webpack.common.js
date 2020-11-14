@@ -2,10 +2,6 @@ const __PATH = require('./paths');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: {
-    Modal: __PATH.src + '/index.ts'
-  },
-
   output: {
     assetModuleFilename: 'assets/[name][ext]'
   },
@@ -22,7 +18,6 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
-        // exclude: /node_modules/,
         options: {
           allowTsInNodeModules: true
         }
@@ -31,12 +26,8 @@ module.exports = {
       {
         test: /\.(scss|css)$/,
         use: [
-
           {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              // hmr: false
-            }
+            loader: MiniCssExtractPlugin.loader
           }, {
             loader: 'css-loader',
             options: {
@@ -51,7 +42,6 @@ module.exports = {
               // }
             }
           }
-
         ]
       }
 
@@ -62,7 +52,6 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      // chunkFilename: 'css/chunks/[name]-[id].css',
     }),
   ],
 

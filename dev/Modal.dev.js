@@ -49,9 +49,24 @@ function isObject(o) {
 
 /***/ }),
 
-/***/ "./src/scss/index.scss":
+/***/ "./src/scss/Dev.scss":
+/*!***************************!*\
+  !*** ./src/scss/Dev.scss ***!
+  \***************************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./src/scss/Modal.scss":
 /*!*****************************!*\
-  !*** ./src/scss/index.scss ***!
+  !*** ./src/scss/Modal.scss ***!
   \*****************************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
@@ -241,6 +256,67 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/Backdrop.ts":
+/*!*************************!*\
+  !*** ./src/Backdrop.ts ***!
+  \*************************/
+/*! namespace exports */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ Backdrop; }
+/* harmony export */ });
+/* harmony import */ var _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @xaro/event-emitter */ "./node_modules/@xaro/event-emitter/src/index.ts");
+/* harmony import */ var _xaro_extend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @xaro/extend */ "./node_modules/@xaro/extend/index.js");
+;
+
+const defaults = {
+    el: null,
+    visible: false,
+    mutation: 'animation',
+    animation: null,
+    timeout: null,
+};
+class Backdrop {
+    constructor(config = {}) {
+        Backdrop.instances.push(this);
+        this.index = Backdrop.instances.length - 1;
+        this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)({}, defaults, config);
+        if (!this.config.el) {
+            const el = document.createElement('div');
+            el.classList.add('modal-backdrop');
+            document.body.append(el);
+            this.config.el = el;
+        }
+        this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default();
+        this.__mutationEndListener = this.__mutationEndListener.bind(this);
+        this.config.el.addEventListener('animationend', this.__mutationEndListener);
+        this.config.el.addEventListener('transitionend', this.__mutationEndListener);
+    }
+    __mutationEndListener(event) {
+        // this.config.animation = false;
+        this.emitter.emit('mutationEnd', this, event);
+    }
+    unsubscribeMutation() {
+        this.emitter.unsubscribe('mutationEnd');
+    }
+    addClass(animationType, classType) {
+        // adding types class to this.config.el
+    }
+    removeClass(animationType, classType) {
+        // removing types class from this.config.el
+    }
+}
+Backdrop.instances = [];
+Backdrop.current = null;
+
+
+/***/ }),
+
 /***/ "./src/Modal.ts":
 /*!**********************!*\
   !*** ./src/Modal.ts ***!
@@ -258,7 +334,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @xaro/event-emitter */ "./node_modules/@xaro/event-emitter/src/index.ts");
 /* harmony import */ var _xaro_extend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @xaro/extend */ "./node_modules/@xaro/extend/index.js");
 /* harmony import */ var _variables__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./variables */ "./src/variables.ts");
+/* harmony import */ var _Backdrop__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Backdrop */ "./src/Backdrop.ts");
 ;
+
 
 
 class Modal {
@@ -268,48 +346,43 @@ class Modal {
      */
     constructor(config) {
         this.pending = false;
-        this.animation = {
-            container: false,
-            backdrop: false
-        };
-        this.timeout = {
-            container: undefined,
-            backdrop: undefined
-        };
-        this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default(config.on);
-        this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)({}, _variables__WEBPACK_IMPORTED_MODULE_2__.defaults, config);
+        Modal.instances.push();
+        this.index = Modal.instances.length - 1;
+        let _config = this.initConfig(_variables__WEBPACK_IMPORTED_MODULE_2__.defaults, config);
+        this.config = _config;
+        this.config.user = config;
+        this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default(this.config.user.on);
         if (typeof config.el === 'string') {
-            this.config.el = document.querySelector(config.el);
-        }
-        if (!this.config.el) {
-            throw new Error("Element does not exists");
+            const el = document.querySelector(config.el);
+            if (!el) {
+                throw new Error("Element does not exists");
+            }
+            this.config.el = el;
         }
         if (!this.config.id) {
             this.config.id = this.config.el.getAttribute(this.config.attr.id) || 'modal-' + Modal.lastUndefinedId++;
         }
-        if (!this.config.dom.backdrop) {
-            this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
-        }
-        if (!this.config.dom.container) {
+        this.backdrop = _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances.length ? _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances[_Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances.length - 1] : new _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default();
+        // set container el
+        if (!this.config.container.el) {
             const containerEl = this.config.el.querySelector('.modal__container');
             if (!containerEl) {
                 throw new Error('[Modal] Container does not exists');
             }
-            this.config.dom.container = containerEl;
+            this.config.container.el = containerEl;
         }
+        // close by data-attribute
         if (this.config.allow.closeAttr) {
             this.__closeAttrListener = this.__closeAttrListener.bind(this);
         }
+        // close by escape key
         if (this.config.allow.closeEsc) {
             this.__closeEscListener = this.__closeEscListener.bind(this);
         }
-        if (this.config.mutations.container) {
+        // add animation-/transition- end listener to container
+        if (this.config.container.mutation) {
             this.__containerMutationEndListener = this.__containerMutationEndListener.bind(this);
-            this.config.dom.container.addEventListener(this.config.mutations.container + 'end', this.__containerMutationEndListener);
-        }
-        if (this.config.dom.backdrop && this.config.mutations.backdrop) {
-            this.__backdropMutationEndListener = this.__backdropMutationEndListener.bind(this);
-            this.config.dom.backdrop.addEventListener(this.config.mutations.backdrop + 'end', this.__backdropMutationEndListener);
+            this.config.container.el.addEventListener(this.config.container.mutation + 'end', this.__containerMutationEndListener);
         }
         // trigger attr
         for (const el of document.querySelectorAll(`[${this.config.attr.target}]`)) {
@@ -317,9 +390,37 @@ class Modal {
                 el.addEventListener('click', () => this.show());
             }
         }
+        // allow click outside container
+        if (this.config.allow.closeOutside) {
+            this.__wrapperClickListener = this.__wrapperClickListener.bind(this);
+            this.config.el.addEventListener('click', this.__wrapperClickListener);
+        }
         this.emitter.emit('init', this);
         if (this.config.visible) {
             this.show({ force: true });
+        }
+    }
+    initConfig(origin, user) {
+        let config = {};
+        for (const key in origin) {
+            if (user.hasOwnProperty(key)) {
+                if ((0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.isObject)(origin[key]) && (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.isObject)(user[key])) {
+                    this.initConfig(origin[key], user[key]);
+                }
+                else {
+                    config[key] = user[key];
+                }
+            }
+            else {
+                config[key] = origin[key];
+            }
+        }
+        return config;
+    }
+    /** DOM wrapper click listener */
+    __wrapperClickListener(event) {
+        if (event.target === this.config.el) {
+            this.hide();
         }
     }
     /** DOM close attributes Listeners */
@@ -335,12 +436,9 @@ class Modal {
             this.emitter.emit('escKey', this, event);
         }
     }
-    /** Animation/Transition listeners */
+    /** Animation/Transition container listener */
     __containerMutationEndListener(event) {
         this.emitter.emit('containerMutationEnd', this, event);
-    }
-    __backdropMutationEndListener(event) {
-        this.emitter.emit('backdropMutationEnd', this, event);
     }
     /** Add DOM Event Listeners */
     addListeners() {
@@ -371,16 +469,23 @@ class Modal {
         }
     }
     /** show/hide mutation end callback */
-    mutationEndCallback(key1, key2, hide, event) {
-        this.animation[key1] = false;
-        if (this.config.dom[key2] && this.animation[key2]) {
-            return;
+    mutationEndCallback(container, hide, event) {
+        if (container) {
+            this.config.container.animation = false;
+            if (this.backdrop && this.backdrop.config.animation) {
+                return;
+            }
+        }
+        else if (this.backdrop) {
+            this.backdrop.config.animation = false;
+            if (this.config.container.animation) {
+                return;
+            }
         }
         this.pending = false;
-        console.log(`[${key1}] ${hide ? 'Hide' : 'Show'}`);
         if (hide) {
-            console.log('here');
             this.config.el.classList.remove(this.config.classes.visible);
+            this.backdrop?.config.el.classList.remove(this.config.backdrop.properties.classes.visible);
         }
         this.emitter.emit('after' + hide ? 'Hide' : 0, this, event);
     }
@@ -394,22 +499,25 @@ class Modal {
                 return;
             }
         }
-        for (const key in this.timeout) {
-            if (this.timeout[key]) {
-                clearTimeout(this.timeout[key]);
-            }
+        if (this.config.container.timeout) {
+            clearTimeout(this.config.container.timeout);
+        }
+        if (this.backdrop && this.backdrop.config.timeout) {
+            clearTimeout(this.backdrop.config.timeout);
         }
         const el = this.config.el;
-        const container = this.config.dom.container;
-        const backdrop = this.config.dom.backdrop;
+        const container = this.config.container.el;
         if (this.pending) {
-            if (this.config.mutations.container) {
-                container.classList.add(this.config.classes[this.config.mutations.container].cancel);
+            if (this.config.container.mutation) {
+                const key = this.config.container.mutation;
+                container.classList.add(this.config.container.properties.classes[key].cancel);
             }
-            if (backdrop && this.config.mutations.backdrop) {
-                backdrop.classList.add(this.config.classes[this.config.mutations.backdrop].cancel);
+            if (this.backdrop && this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
+                this.backdrop.emitter.unsubscribe('mutationEnd');
             }
-            this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
+            this.emitter.unsubscribe('containerMutationEnd');
         }
         this.emitter.emit('beforeShow', this);
         this.config.visible = true;
@@ -418,52 +526,60 @@ class Modal {
             document.activeElement.blur();
         }
         this.pending = true;
-        if (this.config.mutations.container) {
-            const key = this.config.mutations.container;
-            container.classList.remove(this.config.classes[key].hide.container, this.config.classes[key].cancel);
+        if (this.config.container.mutation) {
+            const key = this.config.container.mutation;
+            container.classList.remove(this.config.container.properties.classes[key].hide, this.config.container.properties.classes[key].cancel);
         }
-        if (backdrop && this.config.mutations.backdrop) {
-            const key = this.config.mutations.backdrop;
-            backdrop.classList.remove(this.config.classes[key].hide.backdrop, this.config.classes[key].cancel);
+        if (this.backdrop && this.config.backdrop.mutation) {
+            const key = this.config.backdrop.mutation;
+            this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes[key].hide, this.config.backdrop.properties.classes[key].cancel);
         }
         el.classList.add(this.config.classes.visible);
-        if (this.config.mutations.container) {
-            const key = this.config.mutations.container;
-            this.animation.container = true;
-            if (+this.config.timeout.container[key] > 0) {
-                this.timeout.container = setTimeout(() => {
-                    container.classList.add(this.config.classes[key].show.container);
-                }, this.config.timeout.container[key]);
-            }
-            else {
-                container.classList.add(this.config.classes[key].show.container);
-            }
-        }
-        if (backdrop && this.config.mutations.backdrop) {
-            const key = this.config.mutations.backdrop;
-            this.animation.backdrop = true;
-            if (+this.config.timeout.backdrop[key] > 0) {
-                this.timeout.backdrop = setTimeout(() => {
-                    backdrop.classList.add(this.config.classes[key].show.backdrop);
-                }, this.config.timeout.backdrop[key]);
-            }
-            else {
-                backdrop.classList.add(this.config.classes[key].show.backdrop);
-            }
-        }
         this.addListeners();
+        if (this.config.container.mutation) {
+            const key = this.config.container.mutation;
+            this.config.container.animation = true;
+            if (+this.config.container.timeouts[key] > 0) {
+                this.config.container.timeout = setTimeout(() => {
+                    container.classList.add(this.config.container.properties.classes[key].show);
+                }, this.config.container.timeouts[key]);
+            }
+            else {
+                container.classList.add(this.config.container.properties.classes[key].show);
+            }
+        }
+        else {
+            container.classList.add(this.config.container.properties.classes.common.show);
+        }
+        if (this.backdrop) {
+            this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes.visible);
+            if (this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
+                this.backdrop.config.animation = true;
+                if (+this.config.backdrop.timeouts[key] > 0) {
+                    this.backdrop.config.timeout = setTimeout(() => {
+                        this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].show);
+                    }, this.config.backdrop.timeouts[key]);
+                }
+                else {
+                    this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].show);
+                }
+            }
+            else {
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes.common.show);
+            }
+        }
         if (!this.config.allow.bodyScroll) {
             document.body.style.overflow = 'hidden';
             document.body.style.height = '100vh';
         }
-        if (this.config.mutations.container) {
-            this.emitter.once('containerMutationEnd', event => this.mutationEndCallback('container', 'backdrop', false, event));
+        if (this.config.container.mutation) {
+            this.emitter.once('containerMutationEnd', event => this.mutationEndCallback(true, false, event));
         }
-        if (this.config.mutations.backdrop) {
-            this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', false, event));
+        if (this.backdrop && this.config.backdrop.mutation) {
+            this.backdrop.emitter.once('mutationEnd', event => this.mutationEndCallback(false, false, event));
         }
-        if (!this.config.mutations.container && !this.config.mutations.backdrop) {
-            this.config.el.classList.remove(this.config.classes.visible);
+        if (!this.config.container.mutation && !this.config.backdrop.mutation) {
             this.emitter.emit('afterShow', this);
         }
     }
@@ -477,38 +593,49 @@ class Modal {
                 return;
             }
         }
-        for (const key in this.timeout) {
-            if (this.timeout[key]) {
-                clearTimeout(this.timeout[key]);
-            }
+        if (this.config.container.timeout) {
+            clearTimeout(this.config.container.timeout);
+        }
+        if (this.backdrop && this.backdrop.config.timeout) {
+            clearTimeout(this.backdrop.config.timeout);
         }
         const el = this.config.el;
-        const container = this.config.dom.container;
-        const backdrop = this.config.dom.backdrop;
+        const container = this.config.container.el;
         if (this.pending) {
-            if (this.config.mutations.container) {
-                container.classList.add(this.config.classes[this.config.mutations.container].cancel);
+            if (this.config.container.mutation) {
+                const key = this.config.container.mutation;
+                container.classList.add(this.config.container.properties.classes[key].cancel);
             }
-            if (backdrop && this.config.mutations.backdrop) {
-                backdrop.classList.add(this.config.classes[this.config.mutations.backdrop].cancel);
+            if (this.backdrop && this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
+                this.backdrop.emitter.unsubscribe('mutationEnd');
             }
-            this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
+            this.emitter.unsubscribe('containerMutationEnd');
         }
         this.emitter.emit('beforeHide', this);
         this.removeListeners();
         this.config.visible = false;
         this.pending = true;
-        if (this.config.mutations.container) {
-            const key = this.config.mutations.container;
-            this.animation.container = true;
-            container.classList.remove(this.config.classes[key].show.container, this.config.classes[key].cancel);
-            container.classList.add(this.config.classes[key].hide.container);
+        if (this.config.container.mutation) {
+            const key = this.config.container.mutation;
+            this.config.container.animation = true;
+            container.classList.remove(this.config.container.properties.classes[key].show, this.config.container.properties.classes[key].cancel);
+            container.classList.add(this.config.container.properties.classes[key].hide);
         }
-        if (backdrop && this.config.mutations.backdrop) {
-            const key = this.config.mutations.backdrop;
-            this.animation.backdrop = true;
-            backdrop.classList.remove(this.config.classes[key].show.backdrop, this.config.classes[key].cancel);
-            backdrop.classList.add(this.config.classes[key].hide.backdrop);
+        else {
+            container.classList.remove(this.config.container.properties.classes.common.show);
+        }
+        if (this.backdrop) {
+            if (this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
+                this.backdrop.config.animation = true;
+                this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes[key].show, this.config.backdrop.properties.classes[key].cancel);
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].hide);
+            }
+            else {
+                this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes.common.show);
+            }
         }
         if (Modal.blurEl) {
             Modal.blurEl.focus();
@@ -518,15 +645,23 @@ class Modal {
             document.body.style.overflow = '';
             document.body.style.height = '';
         }
-        if (this.config.mutations.container) {
-            this.emitter.once('containerMutationEnd', event => this.mutationEndCallback('container', 'backdrop', true, event));
+        if (this.config.container.mutation) {
+            this.emitter.once('containerMutationEnd', event => this.mutationEndCallback(true, true, event));
         }
-        if (this.config.mutations.backdrop) {
-            this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', true, event));
+        if (this.backdrop && this.config.backdrop.mutation) {
+            this.backdrop.emitter.once('mutationEnd', event => this.mutationEndCallback(false, true, event));
         }
-        if (!this.config.mutations.container && !this.config.mutations.backdrop) {
-            el.classList.remove(this.config.classes.visible);
-            this.emitter.emit('afterHide', this);
+        if (this.backdrop) {
+            if (!this.config.container.mutation && !this.config.backdrop.mutation) {
+                el.classList.remove(this.config.classes.visible);
+                this.emitter.emit('afterHide', this);
+            }
+        }
+        else {
+            if (!this.config.container.mutation) {
+                el.classList.remove(this.config.classes.visible);
+                this.emitter.emit('afterHide', this);
+            }
         }
     }
     /**
@@ -537,6 +672,7 @@ class Modal {
         this.config.visible ? this.hide(config) : this.show(config);
     }
 }
+Modal.instances = [];
 Modal.blurEl = null;
 Modal.lastUndefinedId = 0;
 
@@ -553,55 +689,16 @@ Modal.lastUndefinedId = 0;
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scss */ "./src/scss/index.scss");
-/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ */ "./src/index.ts");
+/* harmony import */ var _scss_Modal_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scss/Modal.scss */ "./src/scss/Modal.scss");
+/* harmony import */ var _scss_Dev_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./scss/Dev.scss */ "./src/scss/Dev.scss");
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ */ "./src/index.ts");
 ;
 
-const modal1 = new ___WEBPACK_IMPORTED_MODULE_1__.default({
-    id: 'test',
-    // el: document.querySelector('.modal-1') as HTMLElement,
+
+const modal = new ___WEBPACK_IMPORTED_MODULE_2__.default({
     el: '.modal-1',
-    // visible: true,
-    // animations: true,
-    // transitions: true,
-    mutations: {
-        container: 'transition',
-        backdrop: 'transition',
-    },
-    attr: {
-        close: 'data-close',
-        target: 'data-target',
-        id: 'data-id',
-    },
-    timeout: {
-        container: {
-            animation: 100,
-            transition: 250
-        },
-        backdrop: {
-            animation: 0,
-            transition: 50
-        },
-    },
-    allow: {
-        bodyScroll: true,
-        // closeEsc:   false,
-        // closeAttr:  false,
-        animateContainer: false,
-    }
 });
-// const modal2 = new Modal({
-//   el: document.querySelector('.modal-2') as HTMLElement,
-//   animations: true,
-// });
-// document.querySelector('.btn-1')?.addEventListener('click', () => {
-//   modal1.show();
-// });
-// document.querySelector('.btn-2')?.addEventListener('click', () => {
-//   modal2.show();
-// });
-window.modal1 = modal1;
-// (window as any).modal2 = modal2;
+window.modal = modal;
 
 
 /***/ }),
@@ -630,40 +727,18 @@ __webpack_require__.r(__webpack_exports__);
   \**************************/
 /*! namespace exports */
 /*! export defaults [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export mutations [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "defaults": function() { return /* binding */ defaults; },
-/* harmony export */   "mutations": function() { return /* binding */ mutations; }
+/* harmony export */   "defaults": function() { return /* binding */ defaults; }
 /* harmony export */ });
 const defaults = {
     id: null,
     el: null,
-    dom: {
-        backdrop: null,
-        container: null
-    },
     visible: false,
-    animations: null,
-    transitions: null,
-    mutations: {
-        container: 'animation',
-        backdrop: 'animation',
-    },
-    timeout: {
-        container: {
-            animation: 0,
-            transition: 100,
-        },
-        backdrop: {
-            animation: 0,
-            transition: 50,
-        }
-    },
     attr: {
         close: 'data-modal-close',
         target: 'data-modal-target',
@@ -673,51 +748,69 @@ const defaults = {
         bodyScroll: false,
         closeEsc: true,
         closeAttr: true,
-        animateContainer: true,
-        animateBackdrop: true
-    },
-    selector: {
-        container: '.modal__container',
-        backdrop: '.modal__backdrop',
-        btnClose: '.modal__btn-close'
+        closeOutside: true,
     },
     classes: {
         visible: 'modal--visible',
-        animation: {
-            cancel: 'modal-animation--cancel',
-            show: {
-                container: 'modal-animation-container--show',
-                backdrop: 'modal-animation-backdrop--show',
-            },
-            hide: {
-                container: 'modal-animation-container--hide',
-                backdrop: 'modal-animation-backdrop--hide',
-            }
+    },
+    container: {
+        el: null,
+        wrapper: null,
+        mutation: 'animation',
+        timeout: null,
+        animation: false,
+        timeouts: {
+            animation: 0,
+            transition: 100,
         },
-        transition: {
-            cancel: 'modal-transition--cancel',
-            show: {
-                container: 'modal-transition-container--show',
-                backdrop: 'modal-transition-backdrop--show',
-            },
-            hide: {
-                container: 'modal-transition-container--hide',
-                backdrop: 'modal-transition-backdrop--hide',
-            }
-        },
-        common: {
-            show: {
-                container: 'modal-container--show',
-                backdrop: 'modal-backdrop--show'
-            },
-            hide: {
-                container: 'modal-container--hide',
-                backdrop: 'modal-backdrop--hide'
+        properties: {
+            selector: '.modal__container',
+            classes: {
+                animation: {
+                    cancel: 'modal-animation--cancel',
+                    show: 'modal-animation-container--show',
+                    hide: 'modal-animation-container--hide',
+                },
+                transition: {
+                    cancel: 'modal-transition--cancel',
+                    show: 'modal-transition-container--show',
+                    hide: 'modal-transition-container--hide',
+                },
+                common: {
+                    show: 'modal-container--hide',
+                    hide: 'modal-container--hide',
+                }
             }
         }
-    }
+    },
+    backdrop: {
+        mutation: 'animation',
+        timeouts: {
+            animation: 0,
+            transition: 50,
+        },
+        properties: {
+            classes: {
+                visible: 'modal-backdrop--visible',
+                animation: {
+                    cancel: 'modal-animation--cancel',
+                    show: 'modal-animation-backdrop--show',
+                    hide: 'modal-animation-backdrop--hide',
+                },
+                transition: {
+                    cancel: 'modal-transition--cancel',
+                    show: 'modal-transition-backdrop--show',
+                    hide: 'modal-transition-backdrop--hide',
+                },
+                common: {
+                    show: 'modal-backdrop--show',
+                    hide: 'modal-backdrop--hide',
+                }
+            }
+        }
+    },
+    user: {}
 };
-const mutations = ['animation', 'transition', false];
 
 
 /***/ })

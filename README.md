@@ -1,7 +1,7 @@
 # @xaro/modal
 
 TS Modal library with animations, transitions and events
-> This is an alpha version of the package and some configuration properties are not implemented or may not work.
+> This is an <span style="color:red">*alpha*</span> version of the package and some configuration properties are not implemented or may not work.
 > The names and meanings of configuration properties are subject to change in the future.
 
 ## Usage
@@ -9,7 +9,8 @@ TS Modal library with animations, transitions and events
 *file.html*
 ```html
 <!--head-->
-  <link rel="stylesheet" href="Modal.css">
+  <link rel="stylesheet" href="Modal.css">  // or import from "@xaro/modal/dev/scss/Modal.scss";
+  <link rel="stylesheet" href="Default.theme.css">  // or import from "@xaro/modal/dev/scss/themes/Default.theme.scss";
 <!--/head-->
 <!--body-->
 <button data-modal-target="test-modal">
