@@ -1,48 +1,31 @@
-import { I_Backdrop, I_Modal, I_ModalConfig, I_ModalConfigNEW, I_ModalConstructorConfig, I_ModalConstructorConfigNEW, I_ModalDisplayConfig, T_Mutation } from "./types";
+import { I_Backdrop, I_Modal, I_ModalConfig, I_ModalConstructorConfig, I_ModalDisplayConfig } from "./types";
 import EventEmitter, { I_EventEmitter } from "@xaro/event-emitter";
-import extend, { isObject } from "@xaro/extend";
-import { defaults, defaultsNEW } from "./variables";
+import { isObject } from "@xaro/extend";
+import { defaults } from "./variables";
 import Backdrop from "./Backdrop";
 
 export default class Modal implements I_Modal {
+  static instances: I_Modal[] = [];
   static blurEl:          Element | null  = null;
   static lastUndefinedId: number          = 0;
 
   protected pending:      boolean         = false;
 
-  protected animation: { container: boolean, backdrop: boolean } = {
-    container:  false,
-    backdrop:   false
-  };
-
-  protected timeout: { container?: number, backdrop?: number } = {
-    container:  undefined,
-    backdrop:   undefined
-  };
-
-  protected container: { animation: boolean, timeout: number | null } = {
-    animation:  false,
-    timeout:    null
-  }
-
   emitter:  I_EventEmitter;
-  config:   I_ModalConfigNEW;
+  config:   I_ModalConfig;
 
-  // TODO: backdrop refactoring
-  static instances: I_Modal[] = [];
   index:    number;
   backdrop: I_Backdrop | null;
-
 
   /**
    * Create Modal
    * @param config I_ModalConstructorConfig
    */
-  constructor(config: I_ModalConstructorConfigNEW) {
+  constructor(config: I_ModalConstructorConfig) {
     Modal.instances.push();
     this.index = Modal.instances.length - 1;
 
-    let _config: any = this.initConfig(defaultsNEW, config);
+    let _config: any = this.initConfig(defaults, config);
 
     this.config = _config;
     this.config.user = config;
@@ -198,7 +181,7 @@ export default class Modal implements I_Modal {
 
   /** show/hide mutation end callback */
   protected mutationEndCallback(key1: string, key2: string, hide: boolean, event: TransitionEvent) {
-    this.animation[key1] = false;
+    this.config.container.animation = false;
 
     if (this.backdrop && this.backdrop.config.animation) {
       return;
@@ -228,10 +211,11 @@ export default class Modal implements I_Modal {
       }
     }
 
-    for (const key in this.timeout) {
-      if (this.timeout[key]) {
-        clearTimeout(this.timeout[key]);
-      }
+    if (this.config.container.timeout) {
+      clearTimeout(this.config.container.timeout);
+    }
+    if (this.backdrop && this.backdrop.config.timeout) {
+      clearTimeout(this.backdrop.config.timeout);
     }
 
     const el        = this.config.el;
@@ -241,7 +225,7 @@ export default class Modal implements I_Modal {
     if (this.pending) {
       if (this.config.container.mutation) {
         const key = this.config.container.mutation;
-        container.classList.add(this.config.classes[key].cancel);
+        container.classList.add(this.config.container.properties.classes[key].cancel);
       }
       if (this.backdrop && this.config.backdrop.mutation) {
         const key = this.config.backdrop.mutation;
@@ -281,9 +265,9 @@ export default class Modal implements I_Modal {
     if (this.config.container.mutation) {
       const key = this.config.container.mutation;
 
-      this.animation.container = true;
+      this.config.container.animation = true;
       if (+this.config.container.timeouts[key] > 0) {
-        this.timeout.container = setTimeout(() => {
+        this.config.container.timeout = setTimeout(() => {
           container.classList.add(this.config.container.properties.classes[key].show);
         }, this.config.container.timeouts[key]);
       } else {
@@ -297,9 +281,9 @@ export default class Modal implements I_Modal {
       if (this.config.backdrop.mutation) {
         const key = this.config.backdrop.mutation;
 
-        this.animation.backdrop = true;
+        this.backdrop.config.animation = true;
         if (+this.config.backdrop.timeouts[key] > 0) {
-          this.timeout.backdrop = setTimeout(() => {
+          this.backdrop.config.timeout = setTimeout(() => {
             this.backdrop!.config.el.classList.add(this.config.backdrop.properties.classes[key].show);
           }, this.config.backdrop.timeouts[key]);
         } else {
@@ -338,10 +322,11 @@ export default class Modal implements I_Modal {
       }
     }
 
-    for (const key in this.timeout) {
-      if (this.timeout[key]) {
-        clearTimeout(this.timeout[key]);
-      }
+    if (this.config.container.timeout) {
+      clearTimeout(this.config.container.timeout);
+    }
+    if (this.backdrop && this.backdrop.config.timeout) {
+      clearTimeout(this.backdrop.config.timeout);
     }
 
     const el        = this.config.el;
@@ -374,7 +359,7 @@ export default class Modal implements I_Modal {
     this.pending = true;
     if (this.config.container.mutation) {
       const key = this.config.container.mutation;
-      this.animation.container = true;
+      this.config.container.animation = true;
       container.classList.remove(this.config.container.properties.classes[key].show, this.config.container.properties.classes[key].cancel);
       container.classList.add(this.config.container.properties.classes[key].hide);
     } else {
@@ -383,7 +368,7 @@ export default class Modal implements I_Modal {
     if (this.backdrop) {
       if (this.config.backdrop.mutation) {
         const key = this.config.backdrop.mutation;
-        this.animation.backdrop = true;
+        this.backdrop.config.animation = true;
         this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes[key].show, this.config.backdrop.properties.classes[key].cancel);
         this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].hide);
       } else {
