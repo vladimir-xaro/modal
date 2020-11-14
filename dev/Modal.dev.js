@@ -364,11 +364,8 @@ class Modal {
         if (!this.config.id) {
             this.config.id = this.config.el.getAttribute(this.config.attr.id) || 'modal-' + Modal.lastUndefinedId++;
         }
-        // if (! this.config.dom.backdrop) {
-        //   this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
-        // }
-        // TODO: backdrop refactoring
         this.backdrop = _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances.length ? _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances[_Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances.length - 1] : new _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default();
+        // set container el
         if (!this.config.container.el) {
             const containerEl = this.config.el.querySelector('.modal__container');
             if (!containerEl) {
@@ -376,12 +373,15 @@ class Modal {
             }
             this.config.container.el = containerEl;
         }
+        // close by data-attribute
         if (this.config.allow.closeAttr) {
             this.__closeAttrListener = this.__closeAttrListener.bind(this);
         }
+        // close by escape key
         if (this.config.allow.closeEsc) {
             this.__closeEscListener = this.__closeEscListener.bind(this);
         }
+        // add animation-/transition- end listener to container
         if (this.config.container.mutation) {
             this.__containerMutationEndListener = this.__containerMutationEndListener.bind(this);
             this.config.container.el.addEventListener(this.config.container.mutation + 'end', this.__containerMutationEndListener);
@@ -392,14 +392,15 @@ class Modal {
                 el.addEventListener('click', () => this.show());
             }
         }
-        this.__wrapperClickListener = this.__wrapperClickListener.bind(this);
-        this.config.el.addEventListener('click', this.__wrapperClickListener);
+        // allow click outside container
+        if (this.config.allow.closeOutside) {
+            this.__wrapperClickListener = this.__wrapperClickListener.bind(this);
+            this.config.el.addEventListener('click', this.__wrapperClickListener);
+        }
         this.emitter.emit('init', this);
         if (this.config.visible) {
             this.show({ force: true });
         }
-        // this.config.dom.backdrop?.addEventListener('mousewheel', (event) => console.log(event));
-        this.config.el.addEventListener('click', event => console.log(event));
     }
     initConfig(origin, user) {
         let config = {};
@@ -437,12 +438,9 @@ class Modal {
             this.emitter.emit('escKey', this, event);
         }
     }
-    /** Animation/Transition listeners */
+    /** Animation/Transition container listener */
     __containerMutationEndListener(event) {
         this.emitter.emit('containerMutationEnd', this, event);
-    }
-    __backdropMutationEndListener(event) {
-        this.emitter.emit('backdropMutationEnd', this, event);
     }
     /** Add DOM Event Listeners */
     addListeners() {
@@ -505,7 +503,6 @@ class Modal {
         }
         const el = this.config.el;
         const container = this.config.container.el;
-        // const backdrop  = this.config.dom.backdrop;
         if (this.pending) {
             if (this.config.container.mutation) {
                 const key = this.config.container.mutation;
@@ -514,12 +511,8 @@ class Modal {
             if (this.backdrop && this.config.backdrop.mutation) {
                 const key = this.config.backdrop.mutation;
                 this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
-                // TODO: backdrop refactoring
-                // this.backdrop.addClass(animationType, classType)
                 this.backdrop.emitter.unsubscribe('mutationEnd');
             }
-            // this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
-            // TODO: backdrop refactoring
             this.emitter.unsubscribe('containerMutationEnd');
         }
         this.emitter.emit('beforeShow', this);
@@ -582,6 +575,9 @@ class Modal {
         // if (this.config.mutations.backdrop) {
         //   this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', false, event));
         // }
+        if (this.backdrop && this.config.backdrop.mutation) {
+            // this.backdrop.emitter.once('mutationEnd', event => this.backdrop.)
+        }
         if (!this.config.container.mutation && !this.config.backdrop.mutation) {
             this.emitter.emit('afterShow', this);
         }
@@ -604,7 +600,6 @@ class Modal {
         }
         const el = this.config.el;
         const container = this.config.container.el;
-        // const backdrop  = this.config.dom.backdrop;
         if (this.pending) {
             if (this.config.container.mutation) {
                 const key = this.config.container.mutation;
@@ -613,12 +608,8 @@ class Modal {
             if (this.backdrop && this.config.backdrop.mutation) {
                 const key = this.config.backdrop.mutation;
                 this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
-                // TODO: backdrop refactoring
-                // this.backdrop.addClass(animationType, classType)
                 this.backdrop.emitter.unsubscribe('mutationEnd');
             }
-            // this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
-            // TODO: backdrop refactoring
             this.emitter.unsubscribe('containerMutationEnd');
         }
         this.emitter.emit('beforeHide', this);

@@ -45,8 +45,6 @@ export default class Backdrop implements I_Backdrop {
 
   protected mutationEndCallback() {
     this.config.animation  = false;
-
-
   }
 
   

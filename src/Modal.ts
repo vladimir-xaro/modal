@@ -46,13 +46,9 @@ export default class Modal implements I_Modal {
       this.config.id = this.config.el.getAttribute(this.config.attr.id) || 'modal-' + Modal.lastUndefinedId++;
     }
 
-    // if (! this.config.dom.backdrop) {
-    //   this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
-    // }
-    // TODO: backdrop refactoring
     this.backdrop = Backdrop.instances.length ? Backdrop.instances[Backdrop.instances.length - 1] : new Backdrop();
 
-
+    // set container el
     if (! this.config.container.el) {
       const containerEl = this.config.el.querySelector('.modal__container');
       
@@ -63,13 +59,17 @@ export default class Modal implements I_Modal {
       this.config.container.el = containerEl as HTMLElement;
     }
 
+    // close by data-attribute
     if (this.config.allow.closeAttr) {
       this.__closeAttrListener              = this.__closeAttrListener.bind(this);
     }
+
+    // close by escape key
     if (this.config.allow.closeEsc) {
       this.__closeEscListener               = this.__closeEscListener.bind(this);
     }
 
+    // add animation-/transition- end listener to container
     if (this.config.container.mutation) {
       this.__containerMutationEndListener = this.__containerMutationEndListener.bind(this);
       this.config.container.el.addEventListener(this.config.container.mutation + 'end', this.__containerMutationEndListener);
@@ -82,17 +82,17 @@ export default class Modal implements I_Modal {
       }
     }
 
-    this.__wrapperClickListener = this.__wrapperClickListener.bind(this);
-    this.config.el.addEventListener('click', this.__wrapperClickListener as EventListener);
+    // allow click outside container
+    if (this.config.allow.closeOutside) {
+      this.__wrapperClickListener = this.__wrapperClickListener.bind(this);
+      this.config.el.addEventListener('click', this.__wrapperClickListener as EventListener);
+    }
 
     this.emitter.emit('init', this);
     
     if (this.config.visible) {
       this.show({ force: true });
     }
-
-    // this.config.dom.backdrop?.addEventListener('mousewheel', (event) => console.log(event));
-    this.config.el.addEventListener('click', event => console.log(event));
   }
 
   protected initConfig(origin, user) {
@@ -138,12 +138,9 @@ export default class Modal implements I_Modal {
   }
 
 
-  /** Animation/Transition listeners */
+  /** Animation/Transition container listener */
   protected __containerMutationEndListener(event: any): void {
     this.emitter.emit('containerMutationEnd', this, event);
-  }
-  protected __backdropMutationEndListener(event: any): void {
-    this.emitter.emit('backdropMutationEnd', this, event);
   }
 
 
@@ -220,7 +217,6 @@ export default class Modal implements I_Modal {
 
     const el        = this.config.el;
     const container = this.config.container.el;
-    // const backdrop  = this.config.dom.backdrop;
 
     if (this.pending) {
       if (this.config.container.mutation) {
@@ -230,12 +226,8 @@ export default class Modal implements I_Modal {
       if (this.backdrop && this.config.backdrop.mutation) {
         const key = this.config.backdrop.mutation;
         this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
-        // TODO: backdrop refactoring
-        // this.backdrop.addClass(animationType, classType)
         this.backdrop.emitter.unsubscribe('mutationEnd');
       }
-      // this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
-      // TODO: backdrop refactoring
       this.emitter.unsubscribe('containerMutationEnd');
     }
 
@@ -305,6 +297,9 @@ export default class Modal implements I_Modal {
     // if (this.config.mutations.backdrop) {
     //   this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', false, event));
     // }
+    if (this.backdrop && this.config.backdrop.mutation) {
+      // this.backdrop.emitter.once('mutationEnd', event => this.backdrop.)
+    }
     if (!this.config.container.mutation && !this.config.backdrop.mutation) {
       this.emitter.emit('afterShow', this);
     }
@@ -331,7 +326,6 @@ export default class Modal implements I_Modal {
 
     const el        = this.config.el;
     const container = this.config.container.el;
-    // const backdrop  = this.config.dom.backdrop;
 
     if (this.pending) {
       if (this.config.container.mutation) {
@@ -341,12 +335,8 @@ export default class Modal implements I_Modal {
       if (this.backdrop && this.config.backdrop.mutation) {
         const key = this.config.backdrop.mutation;
         this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
-        // TODO: backdrop refactoring
-        // this.backdrop.addClass(animationType, classType)
         this.backdrop.emitter.unsubscribe('mutationEnd');
       }
-      // this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
-      // TODO: backdrop refactoring
       this.emitter.unsubscribe('containerMutationEnd');
     }
 
