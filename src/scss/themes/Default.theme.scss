@@ -23,9 +23,6 @@
 .modal {
   $self: &;
 
-  &__backdrop {
-  }
-  
   &__container {
     transform: translateY(-100px);
     box-shadow: 5px 5px 15px -5px black;
@@ -58,9 +55,11 @@
       }
     }
   }
+}
 
+.modal {
   /** animation */
-  #{$self}-animation {
+  &-animation {
     &-backdrop {
       &--show {
         animation: fadeIn 200ms linear both;
@@ -84,7 +83,7 @@
 
 
   /** transition */
-  #{$self}-transition {
+  &-transition {
     &-backdrop {
       &--show {
         opacity: 1;
