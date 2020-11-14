@@ -9,7 +9,7 @@ const modal = new Modal({
   //   container:  'transition',
   //   backdrop:   'transition'
   // },
-  visible: true,
+  // visible: true,
 });
 
 (window as any).modal = modal;

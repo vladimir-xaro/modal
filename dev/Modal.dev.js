@@ -86,52 +86,23 @@ __webpack_require__.r(__webpack_exports__);
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-var __values = (undefined && undefined.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
-var __read = (undefined && undefined.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-var __spread = (undefined && undefined.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
-};
-var EventEmitter = /** @class */ (function () {
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ EventEmitter; }
+/* harmony export */ });
+class EventEmitter {
     /**
      * Create Emitter
      */
-    function EventEmitter(on) {
-        if (on === void 0) { on = {}; }
+    constructor(on = {}) {
         /**
          * Event list
          */
         this.events = {};
-        for (var key in on) {
+        for (let key in on) {
             if (on[key]) {
                 this.subscribe(key, on[key]);
             }
@@ -140,203 +111,129 @@ var EventEmitter = /** @class */ (function () {
     /**
      * Creates a key for the event and subscribes the passed callback to it.
      */
-    EventEmitter.prototype.subscribe = function (key, cb) {
-        var e_1, _a;
-        var _this = this;
+    subscribe(key, cb) {
         if (!this.has(key)) {
             this.events[key] = [];
         }
-        var removes = [];
+        let removes = [];
         if (Array.isArray(cb)) {
-            try {
-                for (var cb_1 = __values(cb), cb_1_1 = cb_1.next(); !cb_1_1.done; cb_1_1 = cb_1.next()) {
-                    var _cb = cb_1_1.value;
-                    removes.push.apply(removes, __spread(this.subscribe(key, _cb)));
-                }
-            }
-            catch (e_1_1) { e_1 = { error: e_1_1 }; }
-            finally {
-                try {
-                    if (cb_1_1 && !cb_1_1.done && (_a = cb_1["return"])) _a.call(cb_1);
-                }
-                finally { if (e_1) throw e_1.error; }
+            for (const _cb of cb) {
+                removes.push(...this.subscribe(key, _cb));
             }
         }
         else {
             this.events[key].push(cb);
-            removes.push(function () { return _this.removeListener(key, cb); });
+            removes.push(() => this.removeListener(key, cb));
         }
         return removes;
-    };
+    }
     /**
      * Unsubscribes all callback functions from the event and removes the event
      * key.
      */
-    EventEmitter.prototype.unsubscribe = function () {
-        var e_2, _a;
-        var keys = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            keys[_i] = arguments[_i];
-        }
-        try {
-            for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
-                var key = keys_1_1.value;
-                if (this.events[key]) {
-                    delete this.events[key];
-                }
+    unsubscribe(...keys) {
+        for (const key of keys) {
+            if (this.events[key]) {
+                delete this.events[key];
             }
         }
-        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-        finally {
-            try {
-                if (keys_1_1 && !keys_1_1.done && (_a = keys_1["return"])) _a.call(keys_1);
-            }
-            finally { if (e_2) throw e_2.error; }
-        }
-    };
+    }
     /**
      * Removes a specific event key callback function.
      */
-    EventEmitter.prototype.removeListener = function (key, cb) {
+    removeListener(key, cb) {
         // if (typeof this.events[key] === 'object') {
         if (Array.isArray(this.events[key])) {
-            var idx = this.events[key].indexOf(cb);
+            const idx = this.events[key].indexOf(cb);
             if (idx > -1) {
                 this.events[key].splice(idx, 1);
             }
         }
-    };
+    }
     /**
      * Calls the callback function only once, and then removes it.
      */
-    EventEmitter.prototype.once = function (key, cb) {
-        var remove = this.subscribe(key, function () {
-            var e_3, _a;
+    once(key, cb) {
+        const remove = this.subscribe(key, () => {
             remove[0]();
             if (Array.isArray(cb)) {
-                try {
-                    for (var cb_2 = __values(cb), cb_2_1 = cb_2.next(); !cb_2_1.done; cb_2_1 = cb_2.next()) {
-                        var _cb = cb_2_1.value;
-                        _cb();
-                    }
-                }
-                catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                finally {
-                    try {
-                        if (cb_2_1 && !cb_2_1.done && (_a = cb_2["return"])) _a.call(cb_2);
-                    }
-                    finally { if (e_3) throw e_3.error; }
+                for (const _cb of cb) {
+                    _cb();
                 }
             }
             else {
                 cb();
             }
         });
-    };
+    }
     /**
      * Checks for an event by key.
      * (Doesn't check for callback functions)
      */
-    EventEmitter.prototype.has = function (key) {
+    has(key) {
         return !!this.events[key];
-    };
+    }
     /**
      * Returns the number of callback functions for the event key or "false" if
      * there is no key
      */
-    EventEmitter.prototype.listenerCount = function (key) {
+    listenerCount(key) {
         if (!this.events.hasOwnProperty(key)) {
             return false;
         }
         return this.events[key].length;
-    };
+    }
     /**
      * Calls all callback functions on events using the event key.
      */
-    EventEmitter.prototype.emit = function (key) {
-        var e_4, _a;
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var event = this.events[key];
+    emit(key, ...args) {
+        const event = this.events[key];
         if (event) {
-            try {
-                for (var event_1 = __values(event), event_1_1 = event_1.next(); !event_1_1.done; event_1_1 = event_1.next()) {
-                    var cb = event_1_1.value;
-                    cb.apply(void 0, __spread(args));
-                }
-            }
-            catch (e_4_1) { e_4 = { error: e_4_1 }; }
-            finally {
-                try {
-                    if (event_1_1 && !event_1_1.done && (_a = event_1["return"])) _a.call(event_1);
-                }
-                finally { if (e_4) throw e_4.error; }
+            for (let cb of event) {
+                cb(...args);
             }
         }
-    };
+    }
     /**
      * Just like "emit" calls all callback functions. However, the callback must
      * return a boolean value, which determines whether or not the next callback
      * will execute.
      * As a result, it returns the result of the last executed callback function.
      */
-    EventEmitter.prototype.validateEmit = function (key) {
-        var e_5, _a;
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var event = this.events[key];
+    validateEmit(key, ...args) {
+        const event = this.events[key];
         if (!event) {
             return false;
         }
-        try {
-            for (var event_2 = __values(event), event_2_1 = event_2.next(); !event_2_1.done; event_2_1 = event_2.next()) {
-                var cb = event_2_1.value;
-                if (!cb.apply(void 0, __spread(args))) {
-                    return false;
-                }
+        for (const cb of event) {
+            if (!cb(...args)) {
+                return false;
             }
-        }
-        catch (e_5_1) { e_5 = { error: e_5_1 }; }
-        finally {
-            try {
-                if (event_2_1 && !event_2_1.done && (_a = event_2["return"])) _a.call(event_2);
-            }
-            finally { if (e_5) throw e_5.error; }
         }
         return true;
-    };
+    }
     /**
      * Just like "emit" calls all callbacks, but unlike "emit" it passes the
      * result of the previous callback to the next one as an argument.
      * As aresult, it will return the result of the last callback.
      */
-    EventEmitter.prototype.seriesEmit = function (key) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var event = this.events[key];
+    seriesEmit(key, ...args) {
+        const event = this.events[key];
         if (!event) {
             return;
         }
-        var params;
-        for (var i = 0; i < event.length; i++) {
+        let params;
+        for (let i = 0; i < event.length; i++) {
             if (i === 0) {
-                params = event[i].apply(event, __spread(args));
+                params = event[i](...args);
             }
             else {
                 params = event[i](params);
             }
         }
         return params;
-    };
-    return EventEmitter;
-}());
-/* harmony default export */ __webpack_exports__["default"] = (EventEmitter);
+    }
+}
 
 
 /***/ }),
@@ -359,6 +256,69 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/Backdrop.ts":
+/*!*************************!*\
+  !*** ./src/Backdrop.ts ***!
+  \*************************/
+/*! namespace exports */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ Backdrop; }
+/* harmony export */ });
+/* harmony import */ var _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @xaro/event-emitter */ "./node_modules/@xaro/event-emitter/src/index.ts");
+/* harmony import */ var _xaro_extend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @xaro/extend */ "./node_modules/@xaro/extend/index.js");
+;
+
+const defaults = {
+    el: null,
+    visible: false,
+    mutation: 'animation',
+    animation: null,
+    timeout: null,
+};
+class Backdrop {
+    constructor(config = {}) {
+        Backdrop.instances.push(this);
+        this.index = Backdrop.instances.length - 1;
+        this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)({}, defaults, config);
+        if (!this.config.el) {
+            const el = document.createElement('div');
+            el.classList.add('modal-backdrop');
+            document.body.append(el);
+            this.config.el = el;
+        }
+        this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default();
+        this.__mutationEndListener = this.__mutationEndListener.bind(this);
+        this.config.el.addEventListener('animationend', this.__mutationEndListener);
+        this.config.el.addEventListener('transitionend', this.__mutationEndListener);
+    }
+    __mutationEndListener(event) {
+        this.emitter.emit('mutationEnd', this, event);
+    }
+    mutationEndCallback() {
+        this.config.animation = false;
+    }
+    unsubscribeMutation() {
+        this.emitter.unsubscribe('mutationEnd');
+    }
+    addClass(animationType, classType) {
+        // adding types class to this.config.el
+    }
+    removeClass(animationType, classType) {
+        // removing types class from this.config.el
+    }
+}
+Backdrop.instances = [];
+Backdrop.current = null;
+
+
+/***/ }),
+
 /***/ "./src/Modal.ts":
 /*!**********************!*\
   !*** ./src/Modal.ts ***!
@@ -366,35 +326,27 @@ __webpack_require__.r(__webpack_exports__);
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ Modal; }
+/* harmony export */ });
 /* harmony import */ var _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @xaro/event-emitter */ "./node_modules/@xaro/event-emitter/src/index.ts");
 /* harmony import */ var _xaro_extend__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @xaro/extend */ "./node_modules/@xaro/extend/index.js");
 /* harmony import */ var _variables__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./variables */ "./src/variables.ts");
-var __values = (undefined && undefined.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
+/* harmony import */ var _Backdrop__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Backdrop */ "./src/Backdrop.ts");
+;
 
 
 
-var Modal = /** @class */ (function () {
+class Modal {
     /**
      * Create Modal
      * @param config I_ModalConstructorConfig
      */
-    function Modal(config) {
-        var e_1, _a;
-        var _this = this;
+    constructor(config) {
         this.pending = false;
         this.animation = {
             container: false,
@@ -404,10 +356,18 @@ var Modal = /** @class */ (function () {
             container: undefined,
             backdrop: undefined
         };
-        this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default(config.on);
-        this.config = (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.default)({}, _variables__WEBPACK_IMPORTED_MODULE_2__.defaults, config);
+        this.container = {
+            animation: false,
+            timeout: null
+        };
+        Modal.instances.push();
+        this.index = Modal.instances.length - 1;
+        let _config = this.initConfig(_variables__WEBPACK_IMPORTED_MODULE_2__.defaultsNEW, config);
+        this.config = _config;
+        this.config.user = config;
+        this.emitter = new _xaro_event_emitter__WEBPACK_IMPORTED_MODULE_0__.default(this.config.user.on);
         if (typeof config.el === 'string') {
-            var el = document.querySelector(config.el);
+            const el = document.querySelector(config.el);
             if (!el) {
                 throw new Error("Element does not exists");
             }
@@ -416,15 +376,17 @@ var Modal = /** @class */ (function () {
         if (!this.config.id) {
             this.config.id = this.config.el.getAttribute(this.config.attr.id) || 'modal-' + Modal.lastUndefinedId++;
         }
-        if (!this.config.dom.backdrop) {
-            this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
-        }
-        if (!this.config.dom.container) {
-            var containerEl = this.config.el.querySelector('.modal__container');
+        // if (! this.config.dom.backdrop) {
+        //   this.config.dom.backdrop = this.config.el.querySelector('.modal__backdrop');
+        // }
+        // TODO: backdrop refactoring
+        this.backdrop = _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances.length ? _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances[_Backdrop__WEBPACK_IMPORTED_MODULE_3__.default.instances.length - 1] : new _Backdrop__WEBPACK_IMPORTED_MODULE_3__.default();
+        if (!this.config.container.el) {
+            const containerEl = this.config.el.querySelector('.modal__container');
             if (!containerEl) {
                 throw new Error('[Modal] Container does not exists');
             }
-            this.config.dom.container = containerEl;
+            this.config.container.el = containerEl;
         }
         if (this.config.allow.closeAttr) {
             this.__closeAttrListener = this.__closeAttrListener.bind(this);
@@ -432,146 +394,144 @@ var Modal = /** @class */ (function () {
         if (this.config.allow.closeEsc) {
             this.__closeEscListener = this.__closeEscListener.bind(this);
         }
-        if (this.config.mutations.container) {
+        if (this.config.container.mutation) {
             this.__containerMutationEndListener = this.__containerMutationEndListener.bind(this);
-            this.config.dom.container.addEventListener(this.config.mutations.container + 'end', this.__containerMutationEndListener);
+            this.config.container.el.addEventListener(this.config.container.mutation + 'end', this.__containerMutationEndListener);
         }
-        if (this.config.dom.backdrop && this.config.mutations.backdrop) {
-            this.__backdropMutationEndListener = this.__backdropMutationEndListener.bind(this);
-            this.config.dom.backdrop.addEventListener(this.config.mutations.backdrop + 'end', this.__backdropMutationEndListener);
-        }
-        try {
-            // trigger attr
-            for (var _b = __values(document.querySelectorAll("[" + this.config.attr.target + "]")), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var el = _c.value;
-                if (el.getAttribute(this.config.attr.target) === this.config.id) {
-                    el.addEventListener('click', function () { return _this.show(); });
-                }
+        // trigger attr
+        for (const el of document.querySelectorAll(`[${this.config.attr.target}]`)) {
+            if (el.getAttribute(this.config.attr.target) === this.config.id) {
+                el.addEventListener('click', () => this.show());
             }
         }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b["return"])) _a.call(_b);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
+        this.__wrapperClickListener = this.__wrapperClickListener.bind(this);
+        this.config.el.addEventListener('click', this.__wrapperClickListener);
         this.emitter.emit('init', this);
         if (this.config.visible) {
             this.show({ force: true });
         }
         // this.config.dom.backdrop?.addEventListener('mousewheel', (event) => console.log(event));
-        this.config.el.addEventListener('click', function (event) { return console.log(event); });
+        this.config.el.addEventListener('click', event => console.log(event));
+    }
+    initConfig(origin, user) {
+        let config = {};
+        for (const key in origin) {
+            if (user.hasOwnProperty(key)) {
+                if ((0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.isObject)(origin[key]) && (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.isObject)(user[key])) {
+                    this.initConfig(origin[key], user[key]);
+                }
+                else {
+                    config[key] = user[key];
+                }
+            }
+            else {
+                config[key] = origin[key];
+            }
+        }
+        return config;
+    }
+    /** DOM wrapper click listener */
+    __wrapperClickListener(event) {
+        if (event.target === this.config.el) {
+            this.hide();
+        }
     }
     /** DOM close attributes Listeners */
-    Modal.prototype.__closeAttrListener = function (event) {
+    __closeAttrListener(event) {
         this.hide();
         this.emitter.emit('closeAttrClick', this, event);
-    };
+    }
     /** DOM Escape listener */
-    Modal.prototype.__closeEscListener = function (event) {
+    __closeEscListener(event) {
         event.stopPropagation();
         if (event.code === 'Escape') {
             this.hide();
             this.emitter.emit('escKey', this, event);
         }
-    };
+    }
     /** Animation/Transition listeners */
-    Modal.prototype.__containerMutationEndListener = function (event) {
+    __containerMutationEndListener(event) {
         this.emitter.emit('containerMutationEnd', this, event);
-    };
-    Modal.prototype.__backdropMutationEndListener = function (event) {
+    }
+    __backdropMutationEndListener(event) {
         this.emitter.emit('backdropMutationEnd', this, event);
-    };
+    }
     /** Add DOM Event Listeners */
-    Modal.prototype.addListeners = function () {
-        var e_2, _a;
+    addListeners() {
         // attr
         if (this.config.allow.closeAttr) {
-            var closeEls = this.config.el.querySelectorAll("[" + this.config.attr.close + "]");
-            try {
-                for (var closeEls_1 = __values(closeEls), closeEls_1_1 = closeEls_1.next(); !closeEls_1_1.done; closeEls_1_1 = closeEls_1.next()) {
-                    var el = closeEls_1_1.value;
-                    el.addEventListener('click', this.__closeAttrListener);
-                }
-            }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (closeEls_1_1 && !closeEls_1_1.done && (_a = closeEls_1["return"])) _a.call(closeEls_1);
-                }
-                finally { if (e_2) throw e_2.error; }
+            const closeEls = this.config.el.querySelectorAll(`[${this.config.attr.close}]`);
+            for (const el of closeEls) {
+                el.addEventListener('click', this.__closeAttrListener);
             }
         }
         // esc
         if (this.config.allow.closeEsc) {
             document.addEventListener('keyup', this.__closeEscListener);
         }
-    };
+    }
     /** Remove DOM Event Listeners */
-    Modal.prototype.removeListeners = function () {
-        var e_3, _a;
+    removeListeners() {
         // attr
         if (this.config.allow.closeAttr) {
-            var closeEls = this.config.el.querySelectorAll("[" + this.config.attr.close + "]");
-            try {
-                for (var closeEls_2 = __values(closeEls), closeEls_2_1 = closeEls_2.next(); !closeEls_2_1.done; closeEls_2_1 = closeEls_2.next()) {
-                    var el = closeEls_2_1.value;
-                    el.removeEventListener('click', this.__closeAttrListener);
-                }
-            }
-            catch (e_3_1) { e_3 = { error: e_3_1 }; }
-            finally {
-                try {
-                    if (closeEls_2_1 && !closeEls_2_1.done && (_a = closeEls_2["return"])) _a.call(closeEls_2);
-                }
-                finally { if (e_3) throw e_3.error; }
+            const closeEls = this.config.el.querySelectorAll(`[${this.config.attr.close}]`);
+            for (const el of closeEls) {
+                el.removeEventListener('click', this.__closeAttrListener);
             }
         }
         // esc
         if (this.config.allow.closeEsc) {
             document.removeEventListener('keyup', this.__closeEscListener);
         }
-    };
+    }
     /** show/hide mutation end callback */
-    Modal.prototype.mutationEndCallback = function (key1, key2, hide, event) {
+    mutationEndCallback(key1, key2, hide, event) {
         this.animation[key1] = false;
-        if (this.config.dom[key2] && this.animation[key2]) {
+        if (this.backdrop && this.backdrop.config.animation) {
             return;
         }
         this.pending = false;
         if (hide) {
             this.config.el.classList.remove(this.config.classes.visible);
+            if (this.backdrop) {
+                this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes.visible);
+            }
         }
         this.emitter.emit('after' + hide ? 'Hide' : 0, this, event);
-    };
+    }
     /**
      * Show modal
      * @param config I_ModalDisplayConfig
      */
-    Modal.prototype.show = function (config) {
-        var _this = this;
+    show(config) {
         if (this.config.visible) {
-            if (!(config === null || config === void 0 ? void 0 : config.force)) {
+            if (!config?.force) {
                 return;
             }
         }
-        for (var key in this.timeout) {
+        for (const key in this.timeout) {
             if (this.timeout[key]) {
                 clearTimeout(this.timeout[key]);
             }
         }
-        var el = this.config.el;
-        var container = this.config.dom.container;
-        var backdrop = this.config.dom.backdrop;
+        const el = this.config.el;
+        const container = this.config.container.el;
+        // const backdrop  = this.config.dom.backdrop;
         if (this.pending) {
-            if (this.config.mutations.container) {
-                container.classList.add(this.config.classes[this.config.mutations.container].cancel);
+            if (this.config.container.mutation) {
+                const key = this.config.container.mutation;
+                container.classList.add(this.config.classes[key].cancel);
             }
-            if (backdrop && this.config.mutations.backdrop) {
-                backdrop.classList.add(this.config.classes[this.config.mutations.backdrop].cancel);
+            if (this.backdrop && this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
+                // TODO: backdrop refactoring
+                // this.backdrop.addClass(animationType, classType)
+                this.backdrop.emitter.unsubscribe('mutationEnd');
             }
-            this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
+            // this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
+            // TODO: backdrop refactoring
+            this.emitter.unsubscribe('containerMutationEnd');
         }
         this.emitter.emit('beforeShow', this);
         this.config.visible = true;
@@ -580,112 +540,119 @@ var Modal = /** @class */ (function () {
             document.activeElement.blur();
         }
         this.pending = true;
-        if (this.config.mutations.container) {
-            var key = this.config.mutations.container;
-            container.classList.remove(this.config.classes[key].hide.container, this.config.classes[key].cancel);
+        if (this.config.container.mutation) {
+            const key = this.config.container.mutation;
+            container.classList.remove(this.config.container.properties.classes[key].hide, this.config.container.properties.classes[key].cancel);
         }
-        if (backdrop && this.config.mutations.backdrop) {
-            var key = this.config.mutations.backdrop;
-            backdrop.classList.remove(this.config.classes[key].hide.backdrop, this.config.classes[key].cancel);
+        if (this.backdrop && this.config.backdrop.mutation) {
+            const key = this.config.backdrop.mutation;
+            this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes[key].hide, this.config.backdrop.properties.classes[key].cancel);
         }
         el.classList.add(this.config.classes.visible);
-        if (this.config.mutations.container) {
-            var key_1 = this.config.mutations.container;
+        this.addListeners();
+        if (this.config.container.mutation) {
+            const key = this.config.container.mutation;
             this.animation.container = true;
-            if (+this.config.timeout.container[key_1] > 0) {
-                this.timeout.container = setTimeout(function () {
-                    container.classList.add(_this.config.classes[key_1].show.container);
-                }, this.config.timeout.container[key_1]);
+            if (+this.config.container.timeouts[key] > 0) {
+                this.timeout.container = setTimeout(() => {
+                    container.classList.add(this.config.container.properties.classes[key].show);
+                }, this.config.container.timeouts[key]);
             }
             else {
-                container.classList.add(this.config.classes[key_1].show.container);
+                container.classList.add(this.config.container.properties.classes[key].show);
             }
         }
         else {
-            container.classList.add(this.config.classes.common.show.container);
+            container.classList.add(this.config.container.properties.classes.common.show);
         }
-        if (backdrop) {
-            if (this.config.mutations.backdrop) {
-                var key_2 = this.config.mutations.backdrop;
+        if (this.backdrop) {
+            this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes.visible);
+            if (this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
                 this.animation.backdrop = true;
-                if (+this.config.timeout.backdrop[key_2] > 0) {
-                    this.timeout.backdrop = setTimeout(function () {
-                        backdrop.classList.add(_this.config.classes[key_2].show.backdrop);
-                    }, this.config.timeout.backdrop[key_2]);
+                if (+this.config.backdrop.timeouts[key] > 0) {
+                    this.timeout.backdrop = setTimeout(() => {
+                        this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].show);
+                    }, this.config.backdrop.timeouts[key]);
                 }
                 else {
-                    backdrop.classList.add(this.config.classes[key_2].show.backdrop);
+                    this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].show);
                 }
             }
             else {
-                backdrop.classList.add(this.config.classes.common.show.backdrop);
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes.common.show);
             }
         }
-        this.addListeners();
         if (!this.config.allow.bodyScroll) {
             document.body.style.overflow = 'hidden';
             document.body.style.height = '100vh';
         }
-        if (this.config.mutations.container) {
-            this.emitter.once('containerMutationEnd', function (event) { return _this.mutationEndCallback('container', 'backdrop', false, event); });
+        if (this.config.container.mutation) {
+            this.emitter.once('containerMutationEnd', event => this.mutationEndCallback('container', 'backdrop', false, event));
         }
-        if (this.config.mutations.backdrop) {
-            this.emitter.once('backdropMutationEnd', function (event) { return _this.mutationEndCallback('backdrop', 'container', false, event); });
-        }
-        if (!this.config.mutations.container && !this.config.mutations.backdrop) {
+        // if (this.config.mutations.backdrop) {
+        //   this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', false, event));
+        // }
+        if (!this.config.container.mutation && !this.config.backdrop.mutation) {
             this.emitter.emit('afterShow', this);
         }
-    };
+    }
     /**
      * Hide modal
      * @param config I_ModalDisplayConfig
      */
-    Modal.prototype.hide = function (config) {
-        var _this = this;
+    hide(config) {
         if (!this.config.visible) {
-            if (!(config === null || config === void 0 ? void 0 : config.force)) {
+            if (!config?.force) {
                 return;
             }
         }
-        for (var key in this.timeout) {
+        for (const key in this.timeout) {
             if (this.timeout[key]) {
                 clearTimeout(this.timeout[key]);
             }
         }
-        var el = this.config.el;
-        var container = this.config.dom.container;
-        var backdrop = this.config.dom.backdrop;
+        const el = this.config.el;
+        const container = this.config.container.el;
+        // const backdrop  = this.config.dom.backdrop;
         if (this.pending) {
-            if (this.config.mutations.container) {
-                container.classList.add(this.config.classes[this.config.mutations.container].cancel);
+            if (this.config.container.mutation) {
+                const key = this.config.container.mutation;
+                container.classList.add(this.config.container.properties.classes[key].cancel);
             }
-            if (backdrop && this.config.mutations.backdrop) {
-                backdrop.classList.add(this.config.classes[this.config.mutations.backdrop].cancel);
+            if (this.backdrop && this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].cancel);
+                // TODO: backdrop refactoring
+                // this.backdrop.addClass(animationType, classType)
+                this.backdrop.emitter.unsubscribe('mutationEnd');
             }
-            this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
+            // this.emitter.unsubscribe('containerMutationEnd', 'backdropMutationEnd');
+            // TODO: backdrop refactoring
+            this.emitter.unsubscribe('containerMutationEnd');
         }
         this.emitter.emit('beforeHide', this);
         this.removeListeners();
         this.config.visible = false;
         this.pending = true;
-        if (this.config.mutations.container) {
-            var key = this.config.mutations.container;
+        if (this.config.container.mutation) {
+            const key = this.config.container.mutation;
             this.animation.container = true;
-            container.classList.remove(this.config.classes[key].show.container, this.config.classes[key].cancel);
-            container.classList.add(this.config.classes[key].hide.container);
+            container.classList.remove(this.config.container.properties.classes[key].show, this.config.container.properties.classes[key].cancel);
+            container.classList.add(this.config.container.properties.classes[key].hide);
         }
         else {
-            container.classList.remove(this.config.classes.common.show.container);
+            container.classList.remove(this.config.container.properties.classes.common.show);
         }
-        if (backdrop) {
-            if (this.config.mutations.backdrop) {
-                var key = this.config.mutations.backdrop;
+        if (this.backdrop) {
+            if (this.config.backdrop.mutation) {
+                const key = this.config.backdrop.mutation;
                 this.animation.backdrop = true;
-                backdrop.classList.remove(this.config.classes[key].show.backdrop, this.config.classes[key].cancel);
-                backdrop.classList.add(this.config.classes[key].hide.backdrop);
+                this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes[key].show, this.config.backdrop.properties.classes[key].cancel);
+                this.backdrop.config.el.classList.add(this.config.backdrop.properties.classes[key].hide);
             }
             else {
-                backdrop.classList.remove(this.config.classes.common.show.backdrop);
+                this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes.common.show);
             }
         }
         if (Modal.blurEl) {
@@ -696,29 +663,29 @@ var Modal = /** @class */ (function () {
             document.body.style.overflow = '';
             document.body.style.height = '';
         }
-        if (this.config.mutations.container) {
-            this.emitter.once('containerMutationEnd', function (event) { return _this.mutationEndCallback('container', 'backdrop', true, event); });
+        if (this.config.container.mutation) {
+            this.emitter.once('containerMutationEnd', event => this.mutationEndCallback('container', 'backdrop', true, event));
         }
-        if (this.config.mutations.backdrop) {
-            this.emitter.once('backdropMutationEnd', function (event) { return _this.mutationEndCallback('backdrop', 'container', true, event); });
+        if (this.config.backdrop.mutation) {
+            this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', true, event));
         }
-        if (!this.config.mutations.container && !this.config.mutations.backdrop) {
+        if (!this.config.container.mutation && !this.config.backdrop.mutation) {
             el.classList.remove(this.config.classes.visible);
             this.emitter.emit('afterHide', this);
         }
-    };
+    }
     /**
      * Toggle display modal
      * @param config I_ModalDisplayConfig
      */
-    Modal.prototype.toggle = function (config) {
+    toggle(config) {
         this.config.visible ? this.hide(config) : this.show(config);
-    };
-    Modal.blurEl = null;
-    Modal.lastUndefinedId = 0;
-    return Modal;
-}());
-/* harmony default export */ __webpack_exports__["default"] = (Modal);
+    }
+}
+Modal.blurEl = null;
+Modal.lastUndefinedId = 0;
+// TODO: backdrop refactoring
+Modal.instances = [];
 
 
 /***/ }),
@@ -739,13 +706,8 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-var modal = new ___WEBPACK_IMPORTED_MODULE_2__.default({
+const modal = new ___WEBPACK_IMPORTED_MODULE_2__.default({
     el: '.modal-1',
-    // mutations: {
-    //   container:  'transition',
-    //   backdrop:   'transition'
-    // },
-    visible: true,
 });
 window.modal = modal;
 
@@ -776,15 +738,17 @@ __webpack_require__.r(__webpack_exports__);
   \**************************/
 /*! namespace exports */
 /*! export defaults [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export defaultsNEW [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "defaults": function() { return /* binding */ defaults; }
+/* harmony export */   "defaults": function() { return /* binding */ defaults; },
+/* harmony export */   "defaultsNEW": function() { return /* binding */ defaultsNEW; }
 /* harmony export */ });
-var defaults = {
+const defaults = {
     id: null,
     el: null,
     dom: {
@@ -856,6 +820,81 @@ var defaults = {
             }
         }
     }
+};
+const defaultsNEW = {
+    id: null,
+    el: null,
+    visible: false,
+    attr: {
+        close: 'data-modal-close',
+        target: 'data-modal-target',
+        id: 'data-modal-id',
+    },
+    allow: {
+        bodyScroll: false,
+        closeEsc: true,
+        closeAttr: true,
+    },
+    classes: {
+        visible: 'modal--visible',
+    },
+    container: {
+        el: null,
+        wrapper: null,
+        mutation: 'animation',
+        timeout: null,
+        animation: false,
+        timeouts: {
+            animation: 0,
+            transition: 100,
+        },
+        properties: {
+            selector: '.modal__container',
+            classes: {
+                animation: {
+                    cancel: 'modal-animation--cancel',
+                    show: 'modal-animation-container--show',
+                    hide: 'modal-animation-container--hide',
+                },
+                transition: {
+                    cancel: 'modal-transition--cancel',
+                    show: 'modal-transition-container--show',
+                    hide: 'modal-transition-container--hide',
+                },
+                common: {
+                    show: 'modal-container--hide',
+                    hide: 'modal-container--hide',
+                }
+            }
+        }
+    },
+    backdrop: {
+        mutation: 'animation',
+        timeouts: {
+            animation: 0,
+            transition: 50,
+        },
+        properties: {
+            classes: {
+                visible: 'modal-backdrop--visible',
+                animation: {
+                    cancel: 'modal-animation--cancel',
+                    show: 'modal-animation-backdrop--show',
+                    hide: 'modal-animation-backdrop--hide',
+                },
+                transition: {
+                    cancel: 'modal-transition--cancel',
+                    show: 'modal-transition-backdrop--show',
+                    hide: 'modal-transition-backdrop--hide',
+                },
+                common: {
+                    show: 'modal-backdrop--show',
+                    hide: 'modal-backdrop--hide',
+                }
+            }
+        }
+    },
+    user: {}
 };
 
 

@@ -14,6 +14,22 @@
     opacity: 0;
   }
 }
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition-duration: 200ms;
+  z-index: 10000;
+}
+.modal-backdrop--visible {
+  display: block;
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -27,22 +43,10 @@
   align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
-  /** animation */
-  /** transition */
-  /** common */
+  z-index: 10001;
 }
 .modal--visible {
   display: block;
-}
-.modal__backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  transition-duration: 200ms;
 }
 .modal__container-wrapper {
   display: flex;
@@ -85,34 +89,41 @@
 .modal__btn-close div:last-child {
   transform: rotate(-45deg);
 }
-.modal .modal-animation-backdrop--show {
-  animation: fadeIn 200ms linear both;
+
+/** animations & transitions */
+.modal {
+  /** animation */
+  /** transition */
+  /** common */
 }
-.modal .modal-animation-backdrop--hide {
-  animation: fadeOut 200ms linear both;
-}
-.modal .modal-animation-container--show {
+.modal-animation-container--show {
   animation: fadeIn 300ms linear both;
 }
-.modal .modal-animation-container--hide {
+.modal-animation-container--hide {
   animation: fadeOut 300ms linear both;
 }
-.modal .modal-animation--cancel {
+.modal-animation-backdrop--show {
+  animation: fadeIn 200ms linear both;
+}
+.modal-animation-backdrop--hide {
+  animation: fadeOut 200ms linear both;
+}
+.modal-animation--cancel {
   animation: none !important;
 }
-.modal .modal-transition-container--show {
+.modal-transition-container--show {
   opacity: 1;
 }
-.modal .modal-transition-container--hide {
+.modal-transition-container--hide {
   opacity: 0;
 }
-.modal .modal-transition-backdrop--show {
+.modal-transition-backdrop--show {
   opacity: 1;
 }
-.modal .modal-transition-backdrop--hide {
+.modal-transition-backdrop--hide {
   opacity: 0;
 }
-.modal .modal-transition--cancel {
+.modal-transition--cancel {
   transition: none !important;
 }
 .modal-container--show {
