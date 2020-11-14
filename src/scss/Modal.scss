@@ -117,10 +117,10 @@
     }
     &-backdrop {
       &--show {
-        animation: fadeIn 200ms linear both;
+        animation: fadeIn 300ms linear both;
       }
       &--hide {
-        animation: fadeOut 200ms linear both;
+        animation: fadeOut 300ms linear both;
       }
     }
     &--cancel {

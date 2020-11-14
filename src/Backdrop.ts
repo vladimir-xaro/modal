@@ -1,4 +1,4 @@
-import EventEmitter, { I_EventEmitter } from "@xaro/event-emitter";
+import EventEmitter, { I_EventEmitter, T_Func } from "@xaro/event-emitter";
 import extend from "@xaro/extend";
 import { I_Backdrop, I_BackdropConfig, I_Modal, T_Mutation } from "./types";
 
@@ -32,22 +32,20 @@ export default class Backdrop implements I_Backdrop {
       this.config.el = el;
     }
 
-    this.emitter  = new EventEmitter();
+    this.emitter = new EventEmitter();
 
     this.__mutationEndListener = this.__mutationEndListener.bind(this);
-    this.config.el.addEventListener('animationend', this.__mutationEndListener);
-    this.config.el.addEventListener('transitionend', this.__mutationEndListener);
+    this.config.el.addEventListener('animationend', this.__mutationEndListener as EventListener);
+    this.config.el.addEventListener('transitionend', this.__mutationEndListener as EventListener);
   }
 
-  protected __mutationEndListener(event: any): void {
+
+  protected __mutationEndListener(event: TransitionEvent | AnimationEvent): void {
+    // this.config.animation = false;
     this.emitter.emit('mutationEnd', this, event);
   }
 
-  protected mutationEndCallback() {
-    this.config.animation  = false;
-  }
 
-  
   unsubscribeMutation() {
     this.emitter.unsubscribe('mutationEnd');
   }
@@ -61,7 +59,4 @@ export default class Backdrop implements I_Backdrop {
   removeClass(animationType: T_Mutation, classType: any) {
     // removing types class from this.config.el
   }
-
-
-
 }

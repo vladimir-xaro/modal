@@ -196,6 +196,8 @@ export interface I_ModalDisplayConfig {
 export interface I_Backdrop {
   emitter:  I_EventEmitter;
   config:   I_BackdropConfig;
+
+  // mutationEndCallback(next?): void;
 }
 
 export interface I_BackdropConfig {

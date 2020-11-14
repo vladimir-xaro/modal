@@ -103,10 +103,10 @@
   animation: fadeOut 300ms linear both;
 }
 .modal-animation-backdrop--show {
-  animation: fadeIn 200ms linear both;
+  animation: fadeIn 300ms linear both;
 }
 .modal-animation-backdrop--hide {
-  animation: fadeOut 200ms linear both;
+  animation: fadeOut 300ms linear both;
 }
 .modal-animation--cancel {
   animation: none !important;

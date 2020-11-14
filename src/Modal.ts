@@ -177,20 +177,26 @@ export default class Modal implements I_Modal {
 
 
   /** show/hide mutation end callback */
-  protected mutationEndCallback(key1: string, key2: string, hide: boolean, event: TransitionEvent) {
-    this.config.container.animation = false;
+  protected mutationEndCallback(container: boolean, hide: boolean, event: AnimationEvent | TransitionEvent) {
+    if (container) {
+      this.config.container.animation = false;
 
-    if (this.backdrop && this.backdrop.config.animation) {
-      return;
+      if (this.backdrop && this.backdrop.config.animation) {
+        return;
+      }
+    } else if (this.backdrop) {
+      this.backdrop.config.animation = false;
+
+      if (this.config.container.animation) {
+        return;
+      }
     }
-    
+
     this.pending = false;
-    
+
     if (hide) {
       this.config.el.classList.remove(this.config.classes.visible);
-      if (this.backdrop) {
-        this.backdrop.config.el.classList.remove(this.config.backdrop.properties.classes.visible);
-      }
+      this.backdrop?.config.el.classList.remove(this.config.backdrop.properties.classes.visible);
     }
 
     this.emitter.emit('after' + hide ? 'Hide' : 'Show', this, event);
@@ -292,13 +298,10 @@ export default class Modal implements I_Modal {
     }
 
     if (this.config.container.mutation) {
-      this.emitter.once('containerMutationEnd', event => this.mutationEndCallback('container', 'backdrop', false, event));
+      this.emitter.once('containerMutationEnd', event => this.mutationEndCallback(true, false, event));
     }
-    // if (this.config.mutations.backdrop) {
-    //   this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', false, event));
-    // }
     if (this.backdrop && this.config.backdrop.mutation) {
-      // this.backdrop.emitter.once('mutationEnd', event => this.backdrop.)
+      this.backdrop.emitter.once('mutationEnd', event => this.mutationEndCallback(false, false, event));
     }
     if (!this.config.container.mutation && !this.config.backdrop.mutation) {
       this.emitter.emit('afterShow', this);
@@ -377,14 +380,22 @@ export default class Modal implements I_Modal {
     }
 
     if (this.config.container.mutation) {
-      this.emitter.once('containerMutationEnd', event => this.mutationEndCallback('container', 'backdrop', true, event));
+      this.emitter.once('containerMutationEnd', event => this.mutationEndCallback(true, true, event));
     }
-    if (this.config.backdrop.mutation) {
-      this.emitter.once('backdropMutationEnd', event => this.mutationEndCallback('backdrop', 'container', true, event));
+    if (this.backdrop && this.config.backdrop.mutation) {
+      this.backdrop.emitter.once('mutationEnd', event => this.mutationEndCallback(false, true, event));
     }
-    if (!this.config.container.mutation && !this.config.backdrop.mutation) {
-      el.classList.remove(this.config.classes.visible);
-      this.emitter.emit('afterHide', this);
+
+    if (this.backdrop) {
+      if (! this.config.container.mutation && !this.config.backdrop.mutation) {
+        el.classList.remove(this.config.classes.visible);
+        this.emitter.emit('afterHide', this);
+      }
+    } else {
+      if (! this.config.container.mutation) {
+        el.classList.remove(this.config.classes.visible);
+        this.emitter.emit('afterHide', this);
+      }
     }
   }
 
