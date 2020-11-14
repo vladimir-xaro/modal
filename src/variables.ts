@@ -10,9 +10,10 @@ export const defaults = {
     id:         'data-modal-id',
   },
   allow: {
-    bodyScroll: false,
-    closeEsc:   true,
-    closeAttr:  true,
+    bodyScroll:   false,
+    closeEsc:     true,
+    closeAttr:    true,
+    closeOutside: true,
   },
   classes: {
     visible:    'modal--visible',

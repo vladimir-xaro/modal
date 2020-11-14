@@ -739,6 +739,7 @@ const defaults = {
         bodyScroll: false,
         closeEsc: true,
         closeAttr: true,
+        closeOutside: true,
     },
     classes: {
         visible: 'modal--visible',
