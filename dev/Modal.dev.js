@@ -405,7 +405,7 @@ class Modal {
         for (const key in origin) {
             if (user.hasOwnProperty(key)) {
                 if ((0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.isObject)(origin[key]) && (0,_xaro_extend__WEBPACK_IMPORTED_MODULE_1__.isObject)(user[key])) {
-                    this.initConfig(origin[key], user[key]);
+                    config[key] = this.initConfig(origin[key], user[key]);
                 }
                 else {
                     config[key] = user[key];
@@ -420,6 +420,7 @@ class Modal {
     /** DOM wrapper click listener */
     __wrapperClickListener(event) {
         if (event.target === this.config.el) {
+            this.emitter.emit('outsideClick', this, event);
             this.hide();
         }
     }
@@ -697,6 +698,12 @@ __webpack_require__.r(__webpack_exports__);
 
 const modal = new ___WEBPACK_IMPORTED_MODULE_2__.default({
     el: '.modal-1',
+    container: {
+        mutation: 'transition'
+    },
+    backdrop: {
+        mutation: 'transition'
+    }
 });
 window.modal = modal;
 

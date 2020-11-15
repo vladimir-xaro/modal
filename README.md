@@ -24,10 +24,16 @@ TS Modal library with animations, transitions and events
 ```
 *file.ts*
 ```ts
-import Modal from "@xaro/modal";
+import Modal, { I_Modal } from "@xaro/modal";
 
 const modal = new Modal({
-  el: document.querySelector('.modal') as HTMLElement // OR '.modal'
+  el: '.modal',
+  on: {
+    afterShow(modal: I_Modal, event?: AnimationEvent | TransitionEvent) {
+      console.log('I\'m showing after container and backdrop animations/transitions are complete');
+    }
+  }
+  // You can see other properties and events below
 });
 ```
 
@@ -44,74 +50,77 @@ interface I_Modal {
   toggle(config?: I_ModalDisplayConfig): void;
 }
 
-interface I_ModalConstructorConfig {
-  id?:          string;                 // for data attr target (or [data-modal-id], priority - object property)
-  el:           HTMLElement | string;   // main wrapper
-  visible?:     boolean;                // show after init
-  mutations?: {
-    container?:         T_Mutation;     // container animation type
-    backdrop?:          T_Mutation;     // backdrop animation type
-  }
-  timeout?: {
-    container?: {
-      animation?:        number;       // add class with animation to container after %number% ms (default: 0)
-      transition?:       number;       // add class with transitions to container after %number% ms (default: 100), preferably more than 50
-
-    };
-    backdrop?: {
-      animation?:        number;       // add class with animation to backdrop after %number% ms (default: 0)
-      transition?:       number;       // add class with transition to backdrop after %number% ms (default: 50), preferably more than 50
-    };
-  };
+interface I_ModalConstructorConfig extends Object {
+  id?:      string;           // default increment number
+  el:       Element | string; // dom element or selector of modal container
+  visible?: boolean;          // force to show after init
   attr?: {
-    close?:             string;         // add close listeners
-    target?:            string;         // open modal by
-    id?:                string;         // unique modal id
+    close?:       string;     // close data-attribute (for mouse click)
+    target?:      string;     // modal trigger data-attribute
+    id?:          string;     // modal id data-attribute
   };
   allow?: {
-    bodyScroll?:        boolean;        // allow body scroll (default: false)
-    closeEsc?:          boolean;        // allow close modal by esc key (default: true)
-    closeAttr?:         boolean;        // allow close modal by [attr.close] (default: true)
-    animateContainer?:  boolean;        // modal will use css animations on fade in/out (default: true)
-    animateBackdrop?:   boolean;        // modal will use css transitions on fade in/out (default: true)
-  };
-  selector?: {
-    container?:         string;         // default: '.modal__container'
-    backdrop?:          string;         // default: '.modal__backdrop'
-    btnClose?:          string;         // default: '.modal__btn-close'
+    bodyScroll?:    boolean;  // allow body scroll while modal is show
+    closeEsc?:      boolean;  // allow close modal by escape key
+    closeAttr?:     boolean;  // allow close data-attribute
+    closeOutside?:  boolean;  // allow close when click outside container
   };
   classes?: {
-    visible?:           string;         // default: 'modal--visible'
-    animation?: {
-      cancel?:            string;       // default: 'modal-animation--cancel'
-      show?: {
-        container?:         string;     // default: 'modal-animation-container--show'
-        backdrop?:          string;     // default: 'modal-animation-backdrop--show'
-      };
-      hide?: {
-        container?:         string;     // default: 'modal-animation-container--hide'
-        backdrop?:          string;     // default: 'modal-animation-backdrop--hide'
+    visible?:     string;     // default: 'modal--visible'
+  };
+  container?: {
+    el?:          Element;    // custom container el
+    mutation?:    T_Mutation; // animation type (animation OR transition)
+    animation?:   boolean;    // animation status
+    timeouts?: {
+      animation?:   number;   // add class with animation to container after %number% ms (default: 0)
+      transition?:  number;   // add class with transitions to container after %number% ms (default: 100), preferably more than 50
+    };
+
+    properties?: {
+      selector?:    string;   // default: '.modal__container'
+      classes?: {
+        animation?: {
+          cancel?:    string; // default: 'modal-animation-container--cancel'
+          show?:      string; // default: 'modal-animation-container--show'
+          hide?:      string; // default: 'modal-animation-container--hide'
+        };
+        transition?: {
+          cancel?:    string; // default: 'modal-transition-container--cancel'
+          show?:      string; // default: 'modal-transition-container--show'
+          hide?:      string; // default: 'modal-transition-container--hide'
+        };
+        common?: {
+          show?:      string; // default: 'modal-container--show'
+          hide?:      string; // default: 'modal-container--hide'
+        };
       };
     };
-    transition?: {
-      cancel?:            string;       // default: 'modal-transition--cancel'
-      show?: {
-        container?:         string;     // default: 'modal-transition-container--show'
-        backdrop?:          string;     // default: 'modal-transition-backdrop--show'
-      };
-      hide?: {
-        container?:         string;     // default: 'modal-transition-container--hide'
-        backdrop?:          string;     // default: 'modal-transition-backdrop--hide'
-      };
+  };
+  backdrop?: {
+    mutation?:    T_Mutation; // animation type (animation OR transition)
+    timeouts?: {
+      animation?:   number;   // add class with animation to backdrop after %number% ms (default: 0)
+      transition?:  number;   // add class with transitions to backdrop after %number% ms (default: 50), preferably more than 50
     };
-    common?: {
-      show?: {
-        container?:         string;     // default: 'modal-container--show'
-        backdrop?:          string;     // default: 'modal-backdrop--show'
-      };
-      hide?: {
-        container?:         string;     // default: 'modal-container--hide'
-        backdrop?:          string;     // default: 'modal-backdrop--hide'
+    properties?: {
+      mutation?:    T_Mutation;
+      classes?: {
+        visible?:     string; // default: 'modal-backdrop--visible'
+        animation?: {
+          cancel?:    string; // default: 'modal-animation-backdrop--cancel'
+          show?:      string; // default: 'modal-animation-backdrop--show'
+          hide?:      string; // default: 'modal-animation-backdrop--hide'
+        };
+        transition?: {
+          cancel?:    string; // default: 'modal-transition-backdrop--cancel'
+          show?:      string; // default: 'modal-transition-backdrop--show'
+          hide?:      string; // default: 'modal-transition-backdrop--hide'
+        };
+        common?: {
+          show?:      string; // default: 'modal-backdrop--show'
+          hide?:      string; // default: 'modal-backdrop--hide'
+        };
       };
     };
   };
@@ -128,7 +137,9 @@ interface I_ModalConstructorConfig {
 }
 
 interface I_ModalDisplayConfig {
-  force?: boolean;
+  force?: boolean;    // ignore current config.visible status
+  // animation?:     boolean;
+  // ignoreEvents?:  boolean;
 }
 
 type T_Mutation = 'animation' | 'transition' | false;

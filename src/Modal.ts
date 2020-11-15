@@ -5,7 +5,7 @@ import { defaults } from "./variables";
 import Backdrop from "./Backdrop";
 
 export default class Modal implements I_Modal {
-  static instances: I_Modal[] = [];
+  static instances:       I_Modal[]       = [];
   static blurEl:          Element | null  = null;
   static lastUndefinedId: number          = 0;
 
@@ -115,6 +115,7 @@ export default class Modal implements I_Modal {
   /** DOM wrapper click listener */
   protected __wrapperClickListener(event: MouseEvent) {
     if (event.target === this.config.el) {
+      this.emitter.emit('outsideClick', this, event);
       this.hide();
     }
   }
