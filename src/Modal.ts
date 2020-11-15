@@ -26,7 +26,6 @@ export default class Modal implements I_Modal {
     this.index = Modal.instances.length - 1;
 
     let _config: any = this.initConfig(defaults, config);
-
     this.config = _config;
     this.config.user = config;
 
@@ -95,12 +94,13 @@ export default class Modal implements I_Modal {
     }
   }
 
+
   protected initConfig(origin, user) {
     let config = {};
     for (const key in origin) {
       if (user.hasOwnProperty(key)) {
         if (isObject(origin[key]) && isObject(user[key])) {
-          this.initConfig(origin[key], user[key]);
+          config[key] = this.initConfig(origin[key], user[key]);
         } else {
           config[key] = user[key];
         }

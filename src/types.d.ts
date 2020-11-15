@@ -26,76 +26,65 @@ export interface I_ModalConstructorConfig extends Object {
     closeOutside?:  boolean;  // allow close when click outside container
   };
   classes?: {
-    visible?:     string;
-  };
-  timeouts?: {
-    animation?: {
-      show?:  number;
-      hide?:  number;
-    };
-    transition?: {
-      show?:  number;
-      hide?:  number;
-    };
+    visible?:     string;     // default: 'modal--visible'
   };
   container?: {
-    el?:          Element;
-    wrapper?:     Element;
-    mutation?:    T_Mutation;
-    animation?:   boolean;
+    el?:          Element;    // custom container el
+    mutation?:    T_Mutation; // animation type (animation OR transition)
+    animation?:   boolean;    // animation status
     timeouts?: {
-      animation?:   number;
-      transition?:  number;
+      animation?:   number;   // add class with animation to container after %number% ms (default: 0)
+      transition?:  number;   // add class with transitions to container after %number% ms (default: 100), preferably more than 50
     };
 
     properties?: {
-      selector?:    string;
+      selector?:    string;   // default: '.modal__container'
       classes?: {
         animation?: {
-          cancel?:    string;
-          show?:      string;
-          hide?:      string;
+          cancel?:    string; // default: 'modal-animation-container--cancel'
+          show?:      string; // default: 'modal-animation-container--show'
+          hide?:      string; // default: 'modal-animation-container--hide'
         };
         transition?: {
-          cancel?:    string;
-          show?:      string;
-          hide?:      string;
+          cancel?:    string; // default: 'modal-transition-container--cancel'
+          show?:      string; // default: 'modal-transition-container--show'
+          hide?:      string; // default: 'modal-transition-container--hide'
         };
         common?: {
-          show?:      string;
-          hide?:      string;
+          show?:      string; // default: 'modal-container--show'
+          hide?:      string; // default: 'modal-container--hide'
         };
       };
     };
   };
   backdrop?: {
-    mutation?:    T_Mutation;
+    mutation?:    T_Mutation; // animation type (animation OR transition)
     timeouts?: {
-      animation?:   number;
-      transition?:  number;
+      animation?:   number;   // add class with animation to backdrop after %number% ms (default: 0)
+      transition?:  number;   // add class with transitions to backdrop after %number% ms (default: 50), preferably more than 50
     };
     properties?: {
-      // selector?:    string;
       mutation?:    T_Mutation;
       classes?: {
-        visible?:     string;
+        visible?:     string; // default: 'modal-backdrop--visible'
         animation?: {
-          cancel?:    string;
-          show?:      string;
-          hide?:      string;
+          cancel?:    string; // default: 'modal-animation-backdrop--cancel'
+          show?:      string; // default: 'modal-animation-backdrop--show'
+          hide?:      string; // default: 'modal-animation-backdrop--hide'
         };
         transition?: {
-          cancel?:    string;
-          show?:      string;
-          hide?:      string;
+          cancel?:    string; // default: 'modal-transition-backdrop--cancel'
+          show?:      string; // default: 'modal-transition-backdrop--show'
+          hide?:      string; // default: 'modal-transition-backdrop--hide'
         };
         common?: {
-          show?:      string;
-          hide?:      string;
+          show?:      string; // default: 'modal-backdrop--show'
+          hide?:      string; // default: 'modal-backdrop--hide'
         };
       };
     };
   };
+
   on?: {
     init?:            (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
     beforeHide?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
@@ -156,7 +145,6 @@ export interface I_ModalConfig {
     };
   };
   backdrop: {
-    // el:         Element;
     mutation:     T_Mutation;
     timeouts: {
       animation:    number;
@@ -196,8 +184,6 @@ export interface I_ModalDisplayConfig {
 export interface I_Backdrop {
   emitter:  I_EventEmitter;
   config:   I_BackdropConfig;
-
-  // mutationEndCallback(next?): void;
 }
 
 export interface I_BackdropConfig {
@@ -206,26 +192,6 @@ export interface I_BackdropConfig {
   mutation:   T_Mutation;     // current modal mutation
   animation:  boolean;        // animation status
   timeout:    number | null;  // timeout id or null
-  // user: User Config (constructor config)
-  properties: {
-    // selector:   string;
-    classes: {
-      animation: {
-        cancel:   string;
-        show:     string;
-        hide:     string;
-      };
-      transition: {
-        cancel:   string;
-        show:     string;
-        hide:     string;
-      };
-      common: {
-        show:     string;
-        hide:     string;
-      };
-    };
-  };
 }
 
 export type T_Mutation = 'animation' | 'transition' | false;
