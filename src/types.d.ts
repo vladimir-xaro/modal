@@ -1,9 +1,11 @@
 import { I_EventEmitter } from "@xaro/event-emitter";
+import { I_CSSClassAnimations } from "@xaro/css-class-animations";
 
 /** Modal */
 export interface I_Modal {
-  emitter:  I_EventEmitter;
-  config:   I_ModalConfig;
+  emitter:    I_EventEmitter;
+  config:     I_ModalConfig;
+  animation?: I_CSSClassAnimations;
 
   show(config?: I_ModalDisplayConfig): void;
   hide(config?: I_ModalDisplayConfig): void;
@@ -86,14 +88,14 @@ export interface I_ModalConstructorConfig extends Object {
   };
 
   on?: {
-    init?:            (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    beforeHide?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    afterHide?:       (modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
-    beforeShow?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    afterShow?:       (modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
-    escKey?:          (modal: I_Modal, event?: KeyboardEvent) => void | ((modal: I_Modal, event?: KeyboardEvent) => void)[];
-    closeAttrClick?:  (modal: I_Modal, event?: MouseEvent) => void | ((modal: I_Modal, event?: MouseEvent) => void)[];
-    outsideClick?:    (modal: I_Modal, event?: MouseEvent) => void | ((modal: I_Modal, event?: MouseEvent) => void)[];
+    init?:            ((modal: I_Modal) => void) | ((modal: I_Modal) => void)[];
+    beforeHide?:      ((modal: I_Modal) => void) | ((modal: I_Modal) => void)[];
+    afterHide?:       ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void) | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
+    beforeShow?:      ((modal: I_Modal) => void) | ((modal: I_Modal) => void)[];
+    afterShow?:       ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void) | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
+    escKey?:          ((modal: I_Modal, event?: KeyboardEvent) => void) | ((modal: I_Modal, event?: KeyboardEvent) => void)[];
+    closeAttrClick?:  ((modal: I_Modal, event?: MouseEvent) => void) | ((modal: I_Modal, event?: MouseEvent) => void)[];
+    outsideClick?:    ((modal: I_Modal, event?: MouseEvent) => void) | ((modal: I_Modal, event?: MouseEvent) => void)[];
   };
 }
 
@@ -184,8 +186,9 @@ export interface I_ModalDisplayConfig {
 
 /** Backdrop */
 export interface I_Backdrop {
-  emitter:  I_EventEmitter;
-  config:   I_BackdropConfig;
+  emitter:    I_EventEmitter;
+  config:     I_BackdropConfig;
+  animation:  I_CSSClassAnimations;
 }
 
 export interface I_BackdropConfig {
