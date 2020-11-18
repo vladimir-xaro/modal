@@ -126,13 +126,14 @@ interface I_ModalConstructorConfig extends Object {
   };
 
   on?: {
-    init?:            (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    beforeHide?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    afterHide?:       (modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
-    beforeShow?:      (modal: I_Modal) => void | ((modal: I_Modal) => void)[];
-    afterShow?:       (modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
-    escKey?:          (modal: I_Modal, event?: KeyboardEvent) => void | ((modal: I_Modal, event?: KeyboardEvent) => void)[];
-    closeAttrClick?:  (modal: I_Modal, event?: MouseEvent) => void | ((modal: I_Modal, event?: MouseEvent) => void)[];
+    init?:            ((modal: I_Modal) => void) | ((modal: I_Modal) => void)[];
+    beforeHide?:      ((modal: I_Modal) => void) | ((modal: I_Modal) => void)[];
+    afterHide?:       ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void) | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
+    beforeShow?:      ((modal: I_Modal) => void) | ((modal: I_Modal) => void)[];
+    afterShow?:       ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void) | ((modal: I_Modal, event?: AnimationEvent | TransitionEvent) => void)[];
+    escKey?:          ((modal: I_Modal, event?: KeyboardEvent) => void) | ((modal: I_Modal, event?: KeyboardEvent) => void)[];
+    closeAttrClick?:  ((modal: I_Modal, event?: MouseEvent) => void) | ((modal: I_Modal, event?: MouseEvent) => void)[];
+    outsideClick?:    ((modal: I_Modal, event?: MouseEvent) => void) | ((modal: I_Modal, event?: MouseEvent) => void)[];
   };
 }
 
