@@ -1,7 +1,7 @@
 # @xaro/modal
 
 TS Modal library with animations, transitions and events
-> This is an <span style="color:red">*alpha*</span> version of the package and some configuration properties are not implemented or may not work.
+> This is an **alpha** version of the package and some configuration properties are not implemented or may not work.
 > The names and meanings of configuration properties are subject to change in the future.
 
 ## Usage
