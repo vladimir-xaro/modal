@@ -5,7 +5,7 @@ export function initConfig(origin, user) {
   for (const key in origin) {
     if (user.hasOwnProperty(key)) {
       if (isObject(origin[key]) && isObject(user[key])) {
-        config[key] = this.initConfig(origin[key], user[key]);
+        config[key] = initConfig(origin[key], user[key]);
       } else {
         config[key] = user[key];
       }
