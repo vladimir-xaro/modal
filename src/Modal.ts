@@ -1,9 +1,9 @@
 import { I_Backdrop, I_Modal, I_ModalConfig, I_ModalConstructorConfig, I_ModalDisplayConfig } from "./types";
 import EventEmitter, { I_EventEmitter } from "@xaro/event-emitter";
-import { isObject } from "@xaro/extend";
 import { defaults } from "./variables";
 import Backdrop from "./Backdrop";
 import CSSClassAnimations, { I_CSSClassAnimations, T_DOMEventsKeys } from "@xaro/css-class-animations";
+import { initConfig } from "./helpers";
 
 export default class Modal implements I_Modal {
   static instances:       I_Modal[]       = [];
@@ -27,7 +27,7 @@ export default class Modal implements I_Modal {
     Modal.instances.push();
     this.index = Modal.instances.length - 1;
 
-    let _config: any = this.initConfig(defaults, config);
+    let _config: any = initConfig(defaults, config);
     this.config = _config;
     this.config.user = config;
 
@@ -104,23 +104,6 @@ export default class Modal implements I_Modal {
     if (this.config.visible) {
       this.show({ force: true });
     }
-  }
-
-
-  protected initConfig(origin, user) {
-    let config = {};
-    for (const key in origin) {
-      if (user.hasOwnProperty(key)) {
-        if (isObject(origin[key]) && isObject(user[key])) {
-          config[key] = this.initConfig(origin[key], user[key]);
-        } else {
-          config[key] = user[key];
-        }
-      } else {
-        config[key] = origin[key];
-      }
-    }
-    return config;
   }
 
 
