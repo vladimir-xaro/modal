@@ -1,7 +1,7 @@
 import CSSClassAnimations, { I_CSSClassAnimations } from "@xaro/css-class-animations";
 import EventEmitter, { I_EventEmitter } from "@xaro/event-emitter";
 import extend from "@xaro/extend";
-import { I_Backdrop, I_BackdropConfig, T_Mutation } from "./types";
+import { I_Backdrop, I_BackdropConfig } from "./types";
 
 const defaults = {
   el:         null,

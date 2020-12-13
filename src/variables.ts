@@ -1,5 +1,3 @@
-import { T_Mutation } from "./types";
-
 export const defaults = {
   id:       null,
   el:       null,
