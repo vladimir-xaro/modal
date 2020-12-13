@@ -9,5 +9,5 @@
 /src/index.dev.ts
 
 .env
-# package-lock.json
+package-lock.json
 tsconfig.json
