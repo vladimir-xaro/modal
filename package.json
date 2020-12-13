@@ -8,9 +8,10 @@
     "build": "cross-env NODE_ENV=development webpack --config webpack/webpack.dev.js",
     "watch:css": "cross-env NODE_ENV=development webpack --watch --config webpack/webpack.css.js",
     "build:css": "cross-env NODE_ENV=development webpack --config webpack/webpack.css.js",
-    "watch:prod": "cross-env NODE_ENV=production webpack --watch --config webpack/webpack.prod.js",
     "build:prod": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js",
-    "build:prod:min": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.min.js"
+    "build:prod:min": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.min.js",
+    "build:all": "npm run build && npm run build:prod && npm run build:prod:min && npm run build:css",
+    "release": "dotenv release-it --"
   },
   "repository": {
     "type": "git",
@@ -51,5 +52,10 @@
     "@xaro/css-class-animations": "0.0.6",
     "@xaro/event-emitter": "^1.4.3",
     "@xaro/extend": "^1.0.4"
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    }
   }
 }
